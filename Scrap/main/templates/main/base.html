@@ -1,0 +1,94 @@
+{% load static %}
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    {% block style %}{% endblock %}
+</head>
+<body>
+    <div class="wrapper d-flex flex-column justify-content-between">
+        <header>
+            <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+                <div class="container-fluid">
+                  <a class="navbar-brand" href="{% url 'main:home_view' %}">سكراب</a>
+                  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                  </button>
+                  <div class="collapse navbar-collapse" id="navbarText">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                      <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'main:home_view' %}">الصفحة الرئيسة</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="#">قطع الغيار</a>
+                      </li>
+                      <!-- if request.user.is_authenticated -->
+                      <li class="nav-item">
+                        <a class="nav-link" href="#">صفحة البائع</a>
+                      </li>
+                      <!--  endif  -->
+                      <!-- if request.user.is_authenticated -->
+                      <li class="nav-item">
+                        <a class="nav-link" href="#">صفحة العميل</a>
+                      </li>
+                      <!-- endif -->
+                      <li class="nav-item">
+                        <a class="nav-link" href="#">تواصل معنا</a>
+                      </li>
+                      <!-- if request.user.is_authenticated -->
+                      <li class="nav-item d-flex">
+                        <p class="text-white my-auto">
+                          | مرحبا محمد
+                          <!-- request.user.username -->
+                          </p>
+                      </li>
+                      <!-- ملاحظة تم اخفاء تسجيل الدخول باستخدام ديسبلي مؤقتا -->
+                      <li class="nav-item" style="display: none;">
+                        <a class="nav-link" href="#">تسجيل الخروج</a>
+                      </li>
+                      <!-- else  -->
+                      <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          تسجيل الدخول
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                          <li><a class="dropdown-item" href="#">تسجيل الدخول</a></li>
+                          <li><a class="dropdown-item" href="#">تسجيل عضوية جديدة</a></li>
+                        </ul>
+                      </li>
+                      <!--  endif  -->
+                    </ul>
+                  </div>
+                </div>
+              </nav>
+        </header>
+        <main>
+          <div class="container">
+            {% if messages %}
+              <div>
+                  {% for message in messages %}
+                      <div class="alert {{ message.tags }} my-2 mx-2 alert-dismissible fade show" role="alert">
+                          {{ message }}
+                          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                      </div>
+                  {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+          {% block content %}
+          {% endblock %}
+        </main>
+        <footer>
+          <div class="container-fluid bg-dark text-white">
+            <p>© سكراب، جميع الحقوق محفوظة</p>
+        </div>          
+        </footer>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+    {% block javascript %}{% endblock %}
+</body>
+</html>

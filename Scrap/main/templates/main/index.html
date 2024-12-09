@@ -1,0 +1,33 @@
+{% extends 'main/base.html' %}
+
+{% load static %}
+
+{% block title %}سكراب | التشليح بين يديك{% endblock %}
+
+{% block style %}<link rel="stylesheet" href="{% static 'css/index.css' %}">{% endblock %}
+
+{% block content %}
+<!-- hero section سكشن لعرض الهيرو -->
+<section class="hero container">
+    <div class="row row-cols-md-2 m-0">
+        <div class="col">
+            <img src="{% static 'images/pexels-fuzzy.jpg' %}" alt="car decoration image">
+        </div>
+        <div class="col">
+            <div class="hero-text d-flex flex-column text-center">
+                <h1 class="hero-title">سكراب</h1>
+                <p>متجر متخصص لبيع وشراء قطع سيارات التشليح</p>
+                <p>سجل عضويتك الآن وابدأ ببيع وشراء قطع سيارتك  </p>
+                <a href="#" class="btn btn-light">سجل عضوية جديدة</a>
+            </div>
+        </div>
+    </div>
+ </section>
+ <!-- autoparts section سكشن لعرض القطع الأساسية -->
+<section class="container">
+    <div>
+        <h1>قطع السيارات</h1>
+    </div>
+    <div></div>
+</section>
+{% endblock %}
