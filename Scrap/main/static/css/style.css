@@ -49,6 +49,10 @@ form select {
     margin-left: 1rem;
 }
 
+.form-center {
+    margin: 0 auto;
+}
+
 
 
 /*** footer ***/   /* ادناه البنود التي بداخل الفوتر */

@@ -8,10 +8,10 @@
 
 {% block content %}
  <section class="container">
-    <h1>اضافة قطعة جديدة</h1>
-    <div class="row">
-        <div class="col-lg-8 col-md-12">
-            <form action="#" method="post" enctype="multipart/form-data" class="d-flex flex-column gap-2">
+     <div class="row">
+         <div class="col-lg-8 col-md-12 form-center">
+             <form action="#" method="post" enctype="multipart/form-data" class="d-flex flex-column gap-2">
+                <h1>اضافة قطعة جديدة</h1>
                 {% csrf_token %}
                 <!-- start of text input -->
                 <input type="text" name="name" class="form-control" placeholder="اسم القطعة" required />
