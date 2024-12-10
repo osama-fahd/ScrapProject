@@ -56,10 +56,10 @@ form select {
 
 
 /*** footer ***/   /* ادناه البنود التي بداخل الفوتر */
-footer p {
+
+footer {
     margin-top: 2rem;
     margin-bottom: 0;
-    padding-bottom: 0;
 }
 
 
