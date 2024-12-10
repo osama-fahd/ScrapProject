@@ -1,0 +1,50 @@
+{% extends 'main/base.html' %}
+
+{% load static %}
+
+{% block title %}نموذج للفورم{% endblock %}
+
+{% block style %}{% endblock %}
+
+{% block content %}
+ <section class="container">
+     <div class="row">
+         <div class="col-lg-8 col-md-12 form-center">
+             <form action="#" method="post" enctype="multipart/form-data" class="d-flex flex-column gap-2">
+                <h1>اضافة قطعة جديدة</h1>
+                {% csrf_token %}
+                <!-- start of text input -->
+                <input type="text" name="name" class="form-control" placeholder="اسم القطعة" required />
+                <!-- end of text input -->
+                <!-- start of image input -->
+                <div>
+                    <h5>الصورة:</h5>
+                    <input type="file" name="logo" class="form-control" accept="images/*" required>
+                </div>
+                <!-- end of image input -->
+                <!-- start of Select dropdown -->
+                <select name="brand" class="form-select" required>
+                    <option value="">يرجى الاختيار</option>
+                    <!-- for item in items -->
+                    <option value="{{ brand.id }}">{{ brand.name }}</option>
+                    <!-- endfor -->
+                </select>
+                <!-- end of Select dropdown -->
+                <!-- start of Checkboxes -->
+                <h5>الاختيارات:</h5>
+                <div class="d-flex flex-wrap align-items-center gap-2">
+                    <!-- for item in items -->
+                    <div>
+                        <input type="checkbox" name="name1" value="value1" id="id1" class="form-check-input" />
+                        <label for="id1" class="check-label">البند الأول</label>
+                    </div>
+                    <!-- endfor -->
+                </div>
+                <!-- end of Checkboxes -->
+                <textarea name="about" class="form-control" placeholder="نص طويل" required></textarea>
+                <input type="submit" class="btn btn-dark" value="تسجيل">
+            </form>
+        </div>
+    </div>
+ </section>
+{% endblock %}
