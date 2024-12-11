@@ -1,0 +1,32 @@
+{% extends 'main/base.html' %}
+
+{% load static %}
+
+{% block title %}اضافة ماركة{% endblock %}
+
+{% block style %}{% endblock %}
+
+{% block content %}
+ <section class="container">
+     <div class="row">
+         <div class="col-lg-8 col-md-12 form-center">
+             <form action="{% url 'Vehicle:new_brand' %}" method="post" enctype="multipart/form-data" class="d-flex flex-column gap-2">
+                <h1>اضافة ماركة سيارات جديدة </h1>
+                {% csrf_token %}
+                <!-- start of text input -->
+                <input type="text" name="name" class="form-control" placeholder="اسم الشركة" required />
+                <!-- end of text input -->
+                <!-- start of image input -->
+                <div>
+                    <h5>شعار الماركة:</h5>
+                    <input type="file" name="logo" class="form-control" accept="images/*" required>
+                </div>
+                <!-- end of image input -->
+                <!-- start of Select dropdown -->
+                
+                <input type="submit" class="btn btn-dark" value="اضافة الماركة">
+            </form>
+        </div>
+    </div>
+ </section>
+{% endblock %}
