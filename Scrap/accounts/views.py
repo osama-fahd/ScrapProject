@@ -24,9 +24,12 @@ def sign_up(request: HttpRequest):
                 profile_customer = ProfileCustomer(user=new_user, neighborhood=request.POST["neighborhood"])
                 profile_customer.save()
                 
-            messages.success(request, "You'r Registered Successfuly!", "alert-success")
+            messages.success(request, "تم التسجيل بنجاح!", "alert-success")
             return redirect("accounts:sign_in")
+        except IntegrityError as e:
+            messages.error(request, "الرقم مسجل مسبقًا!", "alert-danger")
         except Exception as e:
+            messages.error(request, "حصل خطأ، حاول مرة اخرى!", "alert-danger")
             print(e)
 
     return render(request, "accounts/signup.html")
@@ -47,13 +50,13 @@ def seller_sign_up(request: HttpRequest):
                 if seller_form.is_valid():
                     seller_form.save()
                     seller_form.user = new_user
-                    messages.success(request, "You'r Registered Successfuly!", "alert-success")
+                    messages.success(request, "تم التسجيل بنجاح!", "alert-success")
                     return redirect("accounts:sign_in")
                 
         except IntegrityError as e:
-            messages.error(request, "Please choose another phone number", "alert-danger")
+            messages.error(request, "الرقم مسجل مسبقًا!", "alert-danger")
         except Exception as e:
-            messages.error(request, "Couldn't register user. Try again", "alert-danger")
+            messages.error(request, "حصل خطأ، حاول مرة اخرى!", "alert-danger")
             print(e)
 
     return render(request, "accounts/seller_signup.html" , {'brands': brands, 'specialized': ProfileSeller.Specialization.choices})
@@ -66,12 +69,23 @@ def sign_in(request:HttpRequest):
 
         if user:
             login(request, user)
-            messages.success(request, "You'r Logged In Successfully!", "alert-success")
+            messages.success(request, "تم تسجيل الدخول بنجاح", "alert-success")
             return redirect(request.GET.get("next", "/"))
         else:
-            messages.error(request, "Please try again", "alert-danger")
+            messages.error(request, "حصل خطأ، حاول مرة اخرى!", "alert-danger")
 
     return render(request, "accounts/signin.html")
+
+
+
+def log_out(request: HttpRequest):
+
+    logout(request)
+    messages.success(request, "تم تسجيل الخروج بنجاح!", "alert-warning")
+
+    return redirect(request.GET.get("next", "/"))
+
+
 
 
 # def update_user_profile(request:HttpRequest):
@@ -95,11 +109,3 @@ def sign_in(request:HttpRequest):
 #             print(e)
 
 #     return render(request, "accounts/update_profile.html")
-
-
-def log_out(request: HttpRequest):
-
-    logout(request)
-    messages.success(request, "You'r Logged Out Successfully", "alert-warning")
-
-    return redirect(request.GET.get("next", "/"))
