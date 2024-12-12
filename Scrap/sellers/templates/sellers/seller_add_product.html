@@ -1,0 +1,66 @@
+{% extends 'main/base.html' %}
+
+{% load static %}
+
+{% block title %}Add Parts{% endblock %}
+
+{% block style %}{% endblock %}
+
+{% block content %}
+<section class="container">
+    <div class="row">
+        <div class="col-11 col-lg-6  form-center">
+            <form action="#" method="post" enctype="multipart/form-data" class="d-flex flex-column gap-2">
+                <h1>Add parts for Seller (2) - Add Parts</h1>
+                {% csrf_token %}
+                <!-- Start of Part 1 -->
+                <div class="part-section">
+                    <div class="d-flex flex-wrap gap-2 align-items-center">
+                        <select name="car" class="form-select" required>
+                            <option value="">Select car</option>
+                            <!-- Example option -->
+                            <option value="1">Car 1</option>
+                        </select>
+
+                        <select name="part" class="form-select" required>
+                            <option value="">Select part to add</option>
+                            <!-- Example option -->
+                            <option value="1">Part 1</option>
+                        </select>
+
+                        <input type="number" name="condition" class="form-control" placeholder="Condition %" required />
+
+                        <input type="number" name="made_in" class="form-control" placeholder="Made in" required value="2010" />
+
+                        <span>TO</span>
+
+                        <input type="number" name="end_model" class="form-control" placeholder="End Model date" required value="2024" />
+
+                        <input type="number" name="amount" class="form-control" placeholder="Amount" required />
+
+                        <input type="number" name="price" class="form-control" placeholder="Price $$$" required />
+
+                        <input type="text" name="description" class="form-control" placeholder="A description" />
+                    </div>
+
+                    <div class="d-flex align-items-center gap-2">
+                        <div>
+                            <input type="radio" name="side" value="left" id="left" class="form-check-input" />
+                            <label for="left" class="form-check-label">Left</label>
+                        </div>
+                        <div>
+                            <input type="radio" name="side" value="right" id="right" class="form-check-input" />
+                            <label for="right" class="form-check-label">Right</label>
+                        </div>
+                        <div>
+                            <input type="radio" name="side" value="none" id="none" class="form-check-input" />
+                            <label for="none" class="form-check-label">None</label>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-dark">Add part</button>
+                </div>
+                <!-- End of Part 1 -->
+
+    </div>
+</section>
+{% endblock %}

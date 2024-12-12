@@ -79,7 +79,7 @@ class CartItem(models.Model):
     
 class OrderHistorty(models.Model):
     
-    # sellers = models.ForeignKey(ProfileSeller, on_delete=models.CASCADE)
+    sellers = models.ForeignKey(ProfileSeller, on_delete=models.CASCADE)
     customer = models.ForeignKey(ProfileCustomer, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
