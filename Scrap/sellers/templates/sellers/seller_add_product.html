@@ -18,45 +18,59 @@
                     <div class="d-flex flex-wrap gap-2 align-items-center">
                         <select name="car" class="form-select" required>
                             <option value="">Select car</option>
-                            <!-- Example option -->
-                            <option value="1">Car 1</option>
+                               {% for car in cars %}
+                                    <option value="{{car.id}}">{{car.name}}</option>
+                               {% endfor %}     
                         </select>
 
                         <select name="part" class="form-select" required>
-                            <option value="">Select part to add</option>
-                            <!-- Example option -->
-                            <option value="1">Part 1</option>
+                            <option value="">Select part</option>
+                               {% for part in parts %}
+                                    <option value="{{part.id}}">{{part.name}}</option>
+                               {% endfor %}     
                         </select>
 
-                        <input type="number" name="condition" class="form-control" placeholder="Condition %" required />
 
-                        <input type="number" name="made_in" class="form-control" placeholder="Made in" required value="2010" />
+                        <select name="part_direction" class="form-select" required>
+                            <option value="">يرجى الاختيار</option>
+                            {% for value, label in part_directions %}
+                                <option value="{{ value }}">{{ label }}</option>
+                            
+                            {% endfor %}
+                        </select>
+           
+                        <input type="number" name="stock" class="form-control w-full" placeholder="الكمية" required />
+  
 
+
+
+                        <input type="text" name="condition" class="form-control" placeholder="حالة القطعة" required />
+
+                        <input type="text" name="made" class="form-control" placeholder="وين صنعت" required />
+
+                        
+                        <input type="number" name="start_date" class="form-control" placeholder="صالحة من موديل" required  maxlength="4" minlength="4" />
                         <span>TO</span>
+                        <input type="number" name="end_date" class="form-control" placeholder="الى هذا الموديل" required maxlength="4" minlength="4" />
 
-                        <input type="number" name="end_model" class="form-control" placeholder="End Model date" required value="2024" />
+                        <div> 
+                            <h5>تفاصيل القطعة</h5>
+                    
+                            <textarea name="description" id="" class="form-control" placeholder="تفاصيل القطعة" required>
 
-                        <input type="number" name="amount" class="form-control" placeholder="Amount" required />
+
+
+                        </textarea>
 
                         <input type="number" name="price" class="form-control" placeholder="Price $$$" required />
 
-                        <input type="text" name="description" class="form-control" placeholder="A description" />
                     </div>
 
-                    <div class="d-flex align-items-center gap-2">
-                        <div>
-                            <input type="radio" name="side" value="left" id="left" class="form-check-input" />
-                            <label for="left" class="form-check-label">Left</label>
-                        </div>
-                        <div>
-                            <input type="radio" name="side" value="right" id="right" class="form-check-input" />
-                            <label for="right" class="form-check-label">Right</label>
-                        </div>
-                        <div>
-                            <input type="radio" name="side" value="none" id="none" class="form-check-input" />
-                            <label for="none" class="form-check-label">None</label>
-                        </div>
+                    <div>
+                        <h5> هل ترغب في اضافة صورة؟:</h5>
+                        <input type="file" name="logo" class="form-control" accept="images/" >
                     </div>
+
                     <button type="button" class="btn btn-dark">Add part</button>
                 </div>
                 <!-- End of Part 1 -->
