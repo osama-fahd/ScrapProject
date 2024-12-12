@@ -1,0 +1,14 @@
+<div class="row row-cols-1 row-cols-md-2">
+    {% for part in parts %}
+    <div class="col p-0">
+        <div class="part-card d-flex flex-column shadow mx-2 my-2 p-2 gap-2">
+            <div>
+                <a href="{% url 'autoparts:products_view' part.id %}" class="main-link"><h5>{{ part.name }}</h5></a>
+            </div>
+            <div class="card-image">
+                <img src="{{ part.image.url }}" alt="{{ part.name }}" />
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
