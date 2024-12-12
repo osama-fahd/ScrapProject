@@ -47,11 +47,11 @@
                           </p>
                       </li>
                       <!-- ملاحظة تم اخفاء تسجيل الدخول باستخدام ديسبلي مؤقتا -->
-                      <!-- {% if request.user.is_authenticated %} -->
+                      <!-- if request.user.is_authenticated -->
                       <li class="nav-item">
                         <a class="nav-link" href="{% url 'accounts:log_out' %}">تسجيل الخروج</a>
                       </li>
-                      <!-- {% else %} -->
+                      <!-- else -->
                         <li class="nav-item dropdown">
                           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             تسجيل\دخول
@@ -61,7 +61,7 @@
                             <li><a class="dropdown-item" href="{% url 'accounts:sign_in' %}?next={{request.path}}">تسجيل الدخول</a></li>
                           </ul>
                         </li>
-                      <!-- {% endif %} -->
+                      <!-- endif -->
 <!-- 
                       <li class="nav-item" style="display: none;">
                         <a class="nav-link" href="#">تسجيل الخروج</a>
@@ -83,19 +83,18 @@
               </nav>
         </header>
         <main>
-          <div class="container">
-            {% if messages %}
-              <div>
-                  {% for message in messages %}
-                      <div class="alert {{ message.tags }} my-2 mx-2 alert-dismissible fade show" role="alert">
-                          {{ message }}
-                          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                      </div>
-                  {% endfor %}
+
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert {{message.tags}} my-2 mx-2 alert-dismissible fade show" role="alert">
+                {{message}}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
               </div>
-            {% endif %}
-          </div>
+            {% endfor %}
+          {% endif %}
+
           {% block content %}
+          
           {% endblock %}
         </main>
         <footer class="container-fluid bg-dark text-white p-2">
