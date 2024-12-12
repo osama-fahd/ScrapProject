@@ -24,7 +24,7 @@ class Part(models.Model):
 class Product(models.Model):
     class PartDirection(models.TextChoices):
         RIGHT = "Right", "يمين"
-        LEFT = "Left", "يساد"
+        LEFT = "Left", "يسار"
 
     part = models.ForeignKey(Part, on_delete=models.CASCADE)
     car = models.ManyToManyField(Car, related_name="products")

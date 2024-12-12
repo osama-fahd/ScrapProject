@@ -1,11 +1,14 @@
 from django.shortcuts import render
 from django.http import HttpRequest
+from autoparts.models import Category
 
 
 # Create your views here.
 def home_view(request: HttpRequest):
+    categories = Category.objects.all()
+    context = {"categories": categories}
 
-    return render(request, "main/index.html")
+    return render(request, "main/index.html", context)
 
 
 
