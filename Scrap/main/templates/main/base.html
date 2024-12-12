@@ -28,7 +28,7 @@
                       </li>
                       <!-- if request.user.is_authenticated -->
                       <li class="nav-item">
-                        <a class="nav-link" href="#">صفحة البائع</a>
+                        <a class="nav-link" href="{% url 'accounts:seller_sign_up' %}">صفحة البائع</a>
                       </li>
                       <!--  endif  -->
                       <!-- if request.user.is_authenticated -->
@@ -39,29 +39,31 @@
                       <li class="nav-item">
                         <a class="nav-link" href="#">تواصل معنا</a>
                       </li>
-                      <!-- if request.user.is_authenticated -->
-                      <li class="nav-item d-flex">
-                        <p class="text-white my-auto">
-                          | مرحبا محمد
-                          <!-- request.user.username -->
-                          </p>
-                      </li>
+                      
+                      {% if request.user.is_authenticated %}
+                        <li class="nav-item d-flex">
+                          <p class="text-white my-auto">
+                            | مرحبا {{request.user.first_name}}
+                            <!-- request.user.username -->
+                            </p>
+                        </li>
+                      {% endif %}
                       <!-- ملاحظة تم اخفاء تسجيل الدخول باستخدام ديسبلي مؤقتا -->
-                      <!-- if request.user.is_authenticated -->
-                      <li class="nav-item">
-                        <a class="nav-link" href="{% url 'accounts:log_out' %}">تسجيل الخروج</a>
-                      </li>
-                      <!-- else -->
+                      {% if request.user.is_authenticated %}
+                        <li class="nav-item">
+                          <a class="nav-link" href="{% url 'accounts:log_out' %}">تسجيل الخروج</a>
+                        </li>
+                      {% else %}
                         <li class="nav-item dropdown">
                           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            تسجيل\دخول
+                            تسجيل\تسجيل الدخول
                           </a>
                           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li><a class="dropdown-item" href="{% url 'accounts:sign_up' %}">تسجيل عضوية جديدة</a></li>
                             <li><a class="dropdown-item" href="{% url 'accounts:sign_in' %}?next={{request.path}}">تسجيل الدخول</a></li>
                           </ul>
                         </li>
-                      <!-- endif -->
+                      {% endif %}
 <!-- 
                       <li class="nav-item" style="display: none;">
                         <a class="nav-link" href="#">تسجيل الخروج</a>

@@ -8,7 +8,6 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Vehicle', '0002_brand_name_en'),
         ('Vehicle', '0001_initial'),
         ('accounts', '0001_initial'),
     ]
