@@ -1,0 +1,111 @@
+{% extends 'main/base.html' %}
+
+{% load static %}
+
+{% block title %}Product Dashboard Sellar{% endblock %}
+
+{% block style %}{% endblock %}
+
+{% block content %}
+<section class="container">
+    <h1 class="text-center my-4">Product Dashboard Sellar</h1>
+
+    <!-- Filter Section -->
+    <form action="#" method="get" class="d-flex flex-wrap gap-2 align-items-center mb-4">
+        {% csrf_token %}
+
+        <select name="autoParts" class="form-select">
+            <option value="#">نوع القطعة</option>
+            <option value="#">مكانيكا</option>
+            <option value="#">بودي</option>
+        </select>
+        <select name="year" class="form-select">
+            <option value="">Year</option>
+            <option value="2023">2023</option>
+            <option value="2024">2024</option>
+        </select>
+        <select name="brand" class="form-select">
+            <option value="">Brand</option>
+            <option value="brand1">Brand 1</option>
+            <option value="brand2">Brand 2</option>
+        </select>
+        <select name="car" class="form-select">
+            <option value="">Car</option>
+            <option value="car1">Car 1</option>
+            <option value="car2">Car 2</option>
+        </select>
+    
+        <button type="submit" class="btn btn-dark">Filter</button>
+    </form>
+
+    <!-- Table Section -->
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>القعطة</th>
+                    <th>الماركة</th>
+                    <th>المركبة</th>
+                    <th>العدد</th>
+                    <th>تصلح من عام</th>
+                    <th>سعر</th>
+                    <th>فعل</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Dummy Data -->
+                <tr>
+                    <td>مكينة</td>
+                    <td>هونداي</td>
+                    <td> اكسنت</td>
+                    <td>5</td>
+                    <td>2010 - 2015</td>
+                    <td>5000</td>
+                    <td>
+                        <a href="#" class="btn btn-danger btn-sm">حذف</a>
+                        <a href="#" class="btn btn-primary btn-sm">تعديل</a>
+                        <a href="#" class="btn btn-success btn-sm">اضافة</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>رفرف</td>
+                    <td>مازدا</td>
+                    <td>واي7</td>
+                    <td>10</td>
+                    <td>2015 - 2020</td>
+                    <td>2000</td>
+                    <td>
+                        <a href="#" class="btn btn-danger btn-sm">حذف</a>
+                        <a href="#" class="btn btn-primary btn-sm">تعديل</a>
+                        <a href="#" class="btn btn-success btn-sm">اضافة</a>
+                    </td>
+                                </tr>
+                <tr>
+                    <td>صدام</td>
+                    <td> تايوتا</td>
+                    <td>هايلوكس </td>
+                    <td>15</td>
+                    <td>2020 - 2023</td>
+                    <td>3000</td>
+                    <td>
+                        <a href="#" class="btn btn-danger btn-sm">حذف</a>
+                        <a href="#" class="btn btn-primary btn-sm">تعديل</a>
+                        <a href="#" class="btn btn-success btn-sm">اضافة</a>
+                    </td>
+                </tr>
+                <!-- End of Dummy Data -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination Section -->
+    <nav aria-label="Page navigation" class="d-flex justify-content-center">
+        <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">...</a></li>
+        </ul>
+    </nav>
+</section>
+{% endblock %}
