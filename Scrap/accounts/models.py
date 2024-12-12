@@ -11,12 +11,12 @@ class ProfileSeller(models.Model):
     
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     specialized = models.CharField(max_length=64, choices= Specialization.choices)
-    registration_date = models.CharField(auto_now_add=True)
+    # registration_date = models.CharField(auto_now_add=True)
     company_name = models.CharField(max_length=255)
     google_map_address = models.URLField(blank=True)
     address = models.CharField(max_length=300)
     commercial_register = models.IntegerField(max_length=10)
-    brands = models.ManyToManyField(Brand, on_delete=models.SET_NULL)
+    # brands = models.ManyToManyField(Brand, on_delete=models.SET_NULL)
     
     def __str__(self) -> str:
         return f'{self.user.first_name} - {self.user.first_name}'
@@ -25,7 +25,7 @@ class ProfileSeller(models.Model):
     
 class ProfileCustomer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    registration_date = models.CharField(auto_now_add=True)
+    # registration_date = models.CharField(auto_now_add=True)
     neighborhood = models.CharField(max_length=100)
     
     def __str__(self) -> str:
