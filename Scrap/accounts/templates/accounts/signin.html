@@ -1,37 +1,29 @@
 {% extends 'main/base.html' %}
 
-{% block title %} Sign In {% endblock %}
+{% block title %}  تسجيل دخول {% endblock %}
+
+{% block style %}{% endblock %}
 
 {% block content %}
-
-{% load static %}
-
-<div class="d-flex flex-column justify-content-center align-items-center w-100">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-12 col-sm-10 col-lg-8 transparent-bg">
-                <div class="d-flex flex-column justify-content-start align-items-start">
-                    <h2 class="m-0">Sign In</h2>
+ <section class="container">
+     <div class="row">
+         <div class="col-lg-8 col-md-12 form-center">
+             <form action="{% url 'accounts:sign_in' %}{% if 'next' in request.GET %}?next={{request.GET.next}}{% endif %}" method="post" enctype="multipart/form-data" class="d-flex flex-column gap-3">
+                <h1> تسجيل الدخول </h1>
+                {% csrf_token %}
+                <div>
+                    <h5>رقم الجوال:</h5>
+                    <input type="text" class="form-control" placeholder="رقم الجوال" name="username">
                 </div>
-                <div class="line mb-4"></div>
 
-                <form class="d-flex flex-column gap-4" action="{% url 'accounts:sign_in' %}{% if 'next' in request.GET %}?next={{request.GET.next}}{% endif %}" method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="floatingInput" placeholder="username" name="username">
-                        <label for="floatingInput">User name</label>
-                    </div>
-
-                    <div class="form-floating">
-                        <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="password">
-                        <label for="floatingPassword">Password</label>
-                    </div>
-
-                    <input type="submit" class="btn btn-dark" value="تسجيل">
-                </form>
-            </div>
+                <div>
+                    <h5> الرمز السري:</h5>
+                    <input type="password" class="form-control"  placeholder="الرمز السري" name="password">
+                </div>
+   
+                <input type="submit" class="btn btn-dark" value="تسجيل">
+            </form>
         </div>
     </div>
-</div>
-
+ </section>
 {% endblock %}

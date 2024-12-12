@@ -2,57 +2,37 @@
 
 {% block title %} تسجيل حساب جديد {% endblock %}
 
+{% block style %}{% endblock %}
+
 {% block content %}
+ <section class="container">
+     <div class="row">
+         <div class="col-lg-8 col-md-12 form-center">
+             <form action="{% url 'accounts:sign_up' %}" method="post" enctype="multipart/form-data" class="d-flex flex-column gap-3">
+                <h1>تسجيل مستخدم جديد  </h1>
+                {% csrf_token %}
+                <!-- start of text input -->
+                <input type="email" name="email" class="form-control" placeholder="الإيميل " required />
 
-{% load static %}
-
-<div class="d-flex flex-column justify-content-center align-items-center w-100">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-12 col-sm-10 col-lg-8 transparent-bg">
-                <div class="d-flex flex-column justify-content-start align-items-start">
-                    <h2 class="m-0">تسجيل مستخدم جديد</h2>
+                <div>
+                    <h5>رقم الجوال:</h5>
+                    <input type="text" class="form-control" id="floatingInput" placeholder="رقم الجوال" name="username">
                 </div>
-                <div class="line mb-4"></div>
 
-                <form class="d-flex flex-column gap-4" action="{% url 'accounts:sign_up' %}" method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
+                <input type="text" class="form-control" id="floatingInput" placeholder="الإسم الأول" name="first_name" required>
 
-                    <div class="form-floating">
-                        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" name="email" required>
-                        <label for="floatingInput">الإيميل</label>
-                    </div>
-                      
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="floatingInput" placeholder="0500426237" name="username">
-                        <label for="floatingInput"> رقم الجوال </label>
-                    </div>
+                <input type="text" class="form-control" id="floatingInput" placeholder="الإسم الأخير" name="last_name" required>
 
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="floatingInput" placeholder="الإسم الأول" name="first_name" required>
-                        <label for="floatingInput">الإسم </label>
-                    </div>
-            
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="floatingInput" placeholder="الإسم الأخير" name="last_name" required>
-                        <label for="floatingInput">الإسم الأخير</label>
-                    </div>
+                <input type="text" class="form-control" id="floatingInput" placeholder="الحي " name="neighborhood" required>
 
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="floatingInput" placeholder="الحي " name="neighborhood" required>
-                        <label for="floatingInput">الحي</label>
-                    </div>
+                <input type="password" class="form-control" id="floatingPassword" placeholder="الرمز السري" name="password">
 
-                    <div class="form-floating">
-                        <input type="password" class="form-control" id="floatingPassword" placeholder="الرمز السري" name="password">
-                        <label for="floatingPassword">الرمز السري</label>
-                    </div>
+                <!-- end of text input -->
+         
 
-                    <input type="submit" class="btn btn-dark" value="تسجيل">
-                </form>
-            </div>
+                <input type="submit" class="btn btn-dark" value="تسجيل">
+            </form>
         </div>
     </div>
-</div>
-
+ </section>
 {% endblock %}
