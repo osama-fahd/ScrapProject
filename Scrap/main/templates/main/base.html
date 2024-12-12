@@ -47,11 +47,27 @@
                           </p>
                       </li>
                       <!-- ملاحظة تم اخفاء تسجيل الدخول باستخدام ديسبلي مؤقتا -->
+                      <!-- {% if request.user.is_authenticated %} -->
+                      <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accounts:log_out' %}">تسجيل الخروج</a>
+                      </li>
+                      <!-- {% else %} -->
+                        <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            تسجيل\دخول
+                          </a>
+                          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="{% url 'accounts:sign_up' %}">تسجيل عضوية جديدة</a></li>
+                            <li><a class="dropdown-item" href="{% url 'accounts:sign_in' %}?next={{request.path}}">تسجيل الدخول</a></li>
+                          </ul>
+                        </li>
+                      <!-- {% endif %} -->
+<!-- 
                       <li class="nav-item" style="display: none;">
                         <a class="nav-link" href="#">تسجيل الخروج</a>
-                      </li>
+                      </li> -->
                       <!-- else  -->
-                      <li class="nav-item dropdown">
+                      <!-- <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                           تسجيل الدخول
                         </a>
@@ -59,7 +75,7 @@
                           <li><a class="dropdown-item" href="#">تسجيل الدخول</a></li>
                           <li><a class="dropdown-item" href="#">تسجيل عضوية جديدة</a></li>
                         </ul>
-                      </li>
+                      </li> -->
                       <!--  endif  -->
                     </ul>
                   </div>
@@ -82,10 +98,10 @@
           {% block content %}
           {% endblock %}
         </main>
-        <footer>
-          <div class="container-fluid bg-dark text-white">
+        <footer class="container-fluid bg-dark text-white p-2">
+          <!-- <div class="container-fluid bg-dark text-white"> -->
             <p>© سكراب، جميع الحقوق محفوظة</p>
-          </div>          
+          <!-- </div>           -->
         </footer>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>

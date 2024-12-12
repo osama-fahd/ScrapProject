@@ -1,0 +1,58 @@
+{% extends 'main/base.html' %}
+
+{% block title %} تسجيل حساب جديد {% endblock %}
+
+{% block content %}
+
+{% load static %}
+
+<div class="d-flex flex-column justify-content-center align-items-center w-100">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-sm-10 col-lg-8 transparent-bg">
+                <div class="d-flex flex-column justify-content-start align-items-start">
+                    <h2 class="m-0">تسجيل مستخدم جديد</h2>
+                </div>
+                <div class="line mb-4"></div>
+
+                <form class="d-flex flex-column gap-4" action="{% url 'accounts:sign_up' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="form-floating">
+                        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" name="email" required>
+                        <label for="floatingInput">الإيميل</label>
+                    </div>
+                      
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="0500426237" name="username">
+                        <label for="floatingInput"> رقم الجوال </label>
+                    </div>
+
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="الإسم الأول" name="first_name" required>
+                        <label for="floatingInput">الإسم </label>
+                    </div>
+            
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="الإسم الأخير" name="last_name" required>
+                        <label for="floatingInput">الإسم الأخير</label>
+                    </div>
+
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="الحي " name="neighborhood" required>
+                        <label for="floatingInput">الحي</label>
+                    </div>
+
+                    <div class="form-floating">
+                        <input type="password" class="form-control" id="floatingPassword" placeholder="الرمز السري" name="password">
+                        <label for="floatingPassword">الرمز السري</label>
+                    </div>
+
+                    <input type="submit" class="btn btn-dark" value="تسجيل">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends 'main/base.html' %}
+
+{% block title %} تسجيل حساب جديد {% endblock %}
+
+{% block content %}
+
+{% load static %}
+
+<div class="d-flex flex-column justify-content-center align-items-center w-100">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-sm-10 col-lg-8 transparent-bg">
+                <div class="d-flex flex-column justify-content-start align-items-start">
+                    <h2 class="m-0">تسجيل بائع جديد</h2>
+                </div>
+                <div class="line mb-4"></div>
+
+                <form class="d-flex flex-column gap-4" action="{% url 'accounts:seller_sign_up' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                      
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="0500426237" name="username">
+                        <label for="floatingInput"> رقم الجوال </label>
+                    </div>
+
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="الإسم الأول" name="first_name" required>
+                        <label for="floatingInput">الإسم الكامل</label>
+                    </div>
+            
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="" name="last_name" required>
+                        <label for="floatingInput"> اسم كراج التشليح</label>
+                    </div>
+
+                    <h3>ماهي شركات السيارات المتخصص بها؟</h3>
+                    <div class="d-flex align-items-center gap-2">
+                        
+                        {% for brand in brands %}
+                            <input type="checkbox" class="form-check-input" name="brands" id="check-{{brand.id}}" value="{{brand.id}}" />
+                            <label for="check-{{brand.id}}">{{brand.name}}</label>
+                        {% endfor %}
+                    </div>
+
+                    <h3>ماهي انواع قطع الغيار المتخصص بها؟</h3>
+                    <select name="specialized" class="form-select" required>
+                        <option value="" disabled selected>اختر نوع او اكثر</option>
+                        {% for value, label in specialized %}
+                            <input type="checkbox" class="form-check-input" name="specialized" id="check-{{value}}" value="{{value}}" />
+                            <label for="check-{{value}}">{{label}}</label>
+                        {% endfor %}
+                    </select>
+
+                    <div class="form-floating">
+                        <input type="number" class="form-control" id="floatingInput" placeholder="1234567891" name="commercial_register" required>
+                        <label for="floatingInput"> السجل التجاري  </label>
+                    </div>
+
+                    <div class="form-floating">
+                        <input type="url" class="form-control" id="floatingTwitch" placeholder="" name="google_map_address" >
+                        <label for="floatingTwitch">رابط عنوان خرائط قوقل </label>
+                      </div>
+
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="" name="address" required>
+                        <label for="floatingInput">  العنوان </label>
+                    </div>
+
+                    <div class="form-floating">
+                        <input type="password" class="form-control" id="floatingPassword" placeholder="الرمز السري" name="password">
+                        <label for="floatingPassword">الرمز السري</label>
+                    </div>
+
+                    <input type="submit" class="btn btn-dark" value="تسجيل">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
