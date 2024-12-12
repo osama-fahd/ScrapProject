@@ -11,7 +11,7 @@
     <div class="row">
         <div class="col-11 col-lg-6  form-center">
             <form action="#" method="post" enctype="multipart/form-data" class="d-flex flex-column gap-2">
-                <h1>Add parts for Seller (2) - Add Parts</h1>
+                <h1>اضافة قطعة</h1>
                 {% csrf_token %}
                 <!-- Start of Part 1 -->
                 <div class="part-section">
@@ -23,7 +23,7 @@
                                {% endfor %}     
                         </select>
 
-                        <select name="part" class="form-select" required>
+                        <select name="part" class="form-select" >
                             <option value="">Select part</option>
                                {% for part in parts %}
                                     <option value="{{part.id}}">{{part.name}}</option>
@@ -71,10 +71,10 @@
                         <input type="file" name="logo" class="form-control" accept="images/" >
                     </div>
 
-                    <button type="button" class="btn btn-dark">Add part</button>
+                    <button type="submit" class="btn btn-dark">Add part</button>
                 </div>
-                <!-- End of Part 1 -->
-
+            </form>
+        </div>
     </div>
 </section>
 {% endblock %}
