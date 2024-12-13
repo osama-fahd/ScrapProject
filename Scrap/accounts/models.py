@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from Vehicle.models import Brand
-
+from datetime import datetime
 
 class ProfileSeller(models.Model):
     class Specialization(models.TextChoices):
