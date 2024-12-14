@@ -13,15 +13,15 @@
             <form action="#" method="post" enctype="multipart/form-data" class="d-flex flex-column gap-2">
                 <h1>اضافة قطعة</h1>
                 {% csrf_token %}
-                <!-- Start of Part 1 -->
-                <div class="part-section">
-                    <div class="d-flex flex-wrap gap-2 align-items-center">
-                        <select name="car" class="form-select" required>
-                            <option value="">Select car</option>
-                               {% for car in cars %}
-                                    <option value="{{car.id}}">{{car.name}}</option>
-                               {% endfor %}     
-                        </select>
+                
+                <select name="category" class="form-select">
+                    <option value="">Select category</option>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+
+
 
                         <select name="part" class="form-select" >
                             <option value="">Select part</option>
@@ -29,6 +29,15 @@
                                     <option value="{{part.id}}">{{part.name}}</option>
                                {% endfor %}     
                         </select>
+
+                        <div class="part-section">
+                            <div class="d-flex flex-wrap gap-2 align-items-center">
+                                <select name="car" class="form-select" required>
+                                    <option value="">Select car</option>
+                                       {% for car in cars %}
+                                            <option value="{{car.id}}">{{car.name}}</option>
+                                       {% endfor %}     
+                                </select>    
 
 
                         <select name="part_direction" class="form-select" required>

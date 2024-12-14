@@ -8,7 +8,7 @@ class ProfileSeller(models.Model):
         pass
     
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    specialized = models.CharField(max_length=64, choices= Specialization.choices)
+    specialized = models.CharField(max_length=64, choices= Specialization.choices,blank=True, null=True)
     registration_date = models.DateField(auto_now_add=True)
     company_name = models.CharField(max_length=255)
     google_map_address = models.URLField(blank=True)
