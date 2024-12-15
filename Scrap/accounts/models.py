@@ -5,7 +5,16 @@ from datetime import datetime
 
 class ProfileSeller(models.Model):
     class Specialization(models.TextChoices):
-        pass
+        ENGINES = "Engine & Transmission", "المكينة والقير"
+        ELECTRICALS = "Electircal",  "قطع كهربائية"
+        EXTERIORS = "Exterior & Body", "البودي"
+        LIGHTS = "lights", "الأنوار"
+        COOLIINGS = "Cooling & Heating", "التبريد والتكييف"
+        INTERIOIR = "Interior & Accessories", "الداخلية والاكسسوارت"
+        SUSPENSIONS = "Suspensions", "الميزانية / نظام التعليق"
+        MECHANICALS = "Mechanical", "قطع ميكانيكية"
+        UNCATEGORIZED = "Uncategorized", "قطع غير مصنفة"
+        ALL = "All", "الكل"
     
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     specialized = models.CharField(max_length=64, choices= Specialization.choices)
