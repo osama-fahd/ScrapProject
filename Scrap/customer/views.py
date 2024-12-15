@@ -42,26 +42,27 @@ def view_cart(request: HttpRequest):
 
 
 def add_cart(request: HttpRequest, product_id: int):
+   try:
+      product = Product.objects.get(pk=product_id)
 
-   product = Product.objects.get(pk=product_id)
+      profile_customer = ProfileCustomer.objects.get(user=request.user)
 
-   profile_customer = ProfileCustomer.objects.get(user=request.user)
+      cart, created = Cart.objects.get_or_create(customer=profile_customer)
 
-   cart, created = Cart.objects.get_or_create(customer=profile_customer)
-   
-   cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+      cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
 
-   if not created:
-      cart_item.quantity += 1
-      messages.success(request, f"تمت أضافة المنتج الي عربة التسوق الخاصة بك." , "alert-success")
-      cart_item.save()
+      if not created:
+         cart_item.quantity += 1
+         messages.success(request, f"تمت أضافة المنتج الي عربة التسوق الخاصة بك." , "alert-success")
+         cart_item.save()
 
-   return redirect('customer:view_cart')
+      return redirect('customer:view_cart')
+   except Exception as e:
+      messages.error(request, f"حدث خطأ: {e}", "alert-danger")
+      return redirect("main:home_view")
+
 
 def remove_from_cart(request: HttpRequest, cart_item_id: int):
-   profile_customer = ProfileCustomer.objects.get(user=request.user)
-   cart = Cart.objects.get(customer=profile_customer)
-
    cart_item = CartItem.objects.get(pk=cart_item_id)
    messages.success(request, f"تمت إزالة المنتج من سلة التسوق الخاصة بك." , "alert-success")
    cart_item.delete()
