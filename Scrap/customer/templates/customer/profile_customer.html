@@ -1,0 +1,23 @@
+{% extends 'main/base.html' %}
+
+{% load static %}
+
+{% block title %}صفحة العميل {% endblock %}
+
+{% block style %}{% endblock %}
+
+{% block content %}
+ <section class="container">
+     <div class="row">
+         <div class="col-lg-8 col-md-12 form-center">
+                <h1>الاسم الأول: {{ profile.user.first_name }}</h1>
+                <h1>الإسم الأخير: {{ profile.user.last_name }}</h1>
+                <h1>الإيميل: {{ profile.user.email }}</h1>
+                <h1>رقم جوال: {{ profile.user.username }}</h1>
+                <p> تاريخ الانضمام : {{ profile.registration_date }}</p>
+                <p> عنوان :  {{ profile.neighborhood }}</p>
+
+        </div>
+    </div>
+ </section>
+{% endblock %}
