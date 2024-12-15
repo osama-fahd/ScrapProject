@@ -39,27 +39,38 @@ def seller_sign_up(request: HttpRequest):
     brands = Brand.objects.all()
     
     if request.method == "POST":
-
         try:
             with transaction.atomic():
-                new_user = User.objects.create_user(username=request.POST["username"],password=request.POST["password"], first_name=request.POST["first_name"])
-                new_user.save()
+                # Create the user
+                new_user = User.objects.create_user(
+                    username=request.POST["username"],
+                    password=request.POST["password"],
+                    first_name=request.POST["first_name"]
+                )
                 
-                #Creating Seller Profile 
+                # Create seller profile form instance
                 seller_form = ProfileSellerForm(request.POST)
                 if seller_form.is_valid():
-                    seller_form.save()
-                    seller_form.user = new_user
+                    # Save the seller profile but attach user after saving
+                    profile = seller_form.save(commit=False)
+                    profile.user = new_user
+                    profile.save()
+                    
                     messages.success(request, "تم التسجيل بنجاح!", "alert-success")
                     return redirect("accounts:sign_in")
-                
-        except IntegrityError as e:
+                else:
+                    messages.error(request, "يرجى تصحيح الأخطاء في النموذج.", "alert-danger")
+
+        except IntegrityError:
             messages.error(request, "الرقم مسجل مسبقًا!", "alert-danger")
         except Exception as e:
             messages.error(request, "حصل خطأ، حاول مرة اخرى!", "alert-danger")
             print(e)
 
-    return render(request, "accounts/seller_signup.html" , {'brands': brands, 'specialized': ProfileSeller.Specialization.choices})
+    return render(request, "accounts/seller_signup.html", {
+        'brands': brands, 
+        'specialized': ProfileSeller.Specialization.choices
+    })
 
 
 
