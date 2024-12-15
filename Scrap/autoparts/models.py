@@ -1,6 +1,7 @@
 from django.db import models
-from accounts.models import ProfileSeller
 from Vehicle.models import Car
+# from accounts.models import ProfileSeller
+from django.apps import apps
 
 # Create your models here.
 class Category(models.Model):
@@ -25,10 +26,14 @@ class Product(models.Model):
     class PartDirection(models.TextChoices):
         RIGHT = "Right", "يمين"
         LEFT = "Left", "يسار"
+        
+    def get_seller(self):
+        return self.seller.objects.get(id=self.seller_id)
+
 
     part = models.ForeignKey(Part, on_delete=models.CASCADE)
     car = models.ManyToManyField(Car, related_name="products")
-    seller = models.ForeignKey(ProfileSeller, on_delete=models.CASCADE, related_name="products")
+    seller = models.ForeignKey('accounts.ProfileSeller', on_delete=models.CASCADE, related_name="products")
     name = models.CharField(max_length=256, blank=True, null=True)
     part_direction = models.CharField(max_length=64, choices=PartDirection.choices, blank=True, null=True)
     made = models.CharField(max_length=64, blank=True, null=True)

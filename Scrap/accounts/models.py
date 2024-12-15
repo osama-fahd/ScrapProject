@@ -2,22 +2,34 @@ from django.db import models
 from django.contrib.auth.models import User
 from Vehicle.models import Brand
 from datetime import datetime
+# from autoparts.models import Category
+
+from django.apps import apps
+
+
+
+# class Specializaty(models.Model):
+#     class Specialization(models.TextChoices):
+#         ENGINES = "Engine & Transmission", "المكينة والقير"
+#         ELECTRICALS = "Electircal",  "قطع كهربائية"
+#         EXTERIORS = "Exterior & Body", "البودي"
+#         LIGHTS = "lights", "الأنوار"
+#         COOLIINGS = "Cooling & Heating", "التبريد والتكييف"
+#         INTERIOIR = "Interior & Accessories", "الداخلية والاكسسوارت"
+#         SUSPENSIONS = "Suspensions", "الميزانية / نظام التعليق"
+#         MECHANICALS = "Mechanical", "قطع ميكانيكية"
+#         UNCATEGORIZED = "Uncategorized", "قطع غير مصنفة"
+#         ALL = "All", "الكل"
+        
+#     specialized = models.CharField(max_length=64, choices= Specialization.choices,blank=True, null=True)
+    
 
 class ProfileSeller(models.Model):
-    class Specialization(models.TextChoices):
-        ENGINES = "Engine & Transmission", "المكينة والقير"
-        ELECTRICALS = "Electircal",  "قطع كهربائية"
-        EXTERIORS = "Exterior & Body", "البودي"
-        LIGHTS = "lights", "الأنوار"
-        COOLIINGS = "Cooling & Heating", "التبريد والتكييف"
-        INTERIOIR = "Interior & Accessories", "الداخلية والاكسسوارت"
-        SUSPENSIONS = "Suspensions", "الميزانية / نظام التعليق"
-        MECHANICALS = "Mechanical", "قطع ميكانيكية"
-        UNCATEGORIZED = "Uncategorized", "قطع غير مصنفة"
-        ALL = "All", "الكل"
+    def get_categories(self):
+        return self.specializaties.all()
     
+    specializaties = models.ManyToManyField('autoparts.Category')
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    specialized = models.CharField(max_length=64, choices= Specialization.choices,blank=True, null=True)
     registration_date = models.DateField(auto_now_add=True)
     company_name = models.CharField(max_length=255)
     google_map_address = models.URLField(blank=True)

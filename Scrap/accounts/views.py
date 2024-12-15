@@ -12,6 +12,8 @@ from .forms import ProfileSellerForm
 
 from Vehicle.models import Brand
 
+from autoparts.models import Category
+
 def sign_up(request: HttpRequest):
     if request.method == "POST":
 
@@ -37,6 +39,7 @@ def sign_up(request: HttpRequest):
 
 def seller_sign_up(request: HttpRequest):
     brands = Brand.objects.all()
+    specializaties  = Category.objects.all()
     
     if request.method == "POST":
         try:
@@ -69,7 +72,7 @@ def seller_sign_up(request: HttpRequest):
 
     return render(request, "accounts/seller_signup.html", {
         'brands': brands, 
-        'specialized': ProfileSeller.Specialization.choices
+        'specializaties': specializaties
     })
 
 

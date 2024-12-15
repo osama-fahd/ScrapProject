@@ -26,7 +26,7 @@
                     <div class="row row-cols-3 row-cols-sm-3 row-cols-lg-4">
                         {% for brand in brands %}
                         <div>
-                            <input type="checkbox" class="form-check-input" name="brands" id="check-{{brand.id}}" value="{{brand.id}}" required/>
+                            <input type="checkbox" class="form-check-input" name="brands" id="check-{{brand.id}}" value="{{brand.id}}"/>
                             <label for="check-{{brand.id}}">{{brand.name}}</label>
                         </div>
                         {% endfor %}
@@ -34,21 +34,20 @@
                     
                 </div>
 
-                <div>
+                <div class="d-flex flex-column gap-1">
                     <h5>ماهي انواع قطع الغيار المتخصص بها؟</h5>
-                    <!-- <select name="specialized" class="form-select" required> -->
-                        <!-- <option value="" disabled selected>اختر نوع او اكثر</option> -->
-                         <!-- <div class="row row-cols-3 row-cols-sm-3 row-cols-lg-4"> -->
-                            <select name="specialized" class="form-select" required>
-                                <option value="">يرجى الاختيار</option>
-                                {% for value, label in specialized %}
-                                    <option value="{{ value }}">{{ label }}</option>
-                
-                                {% endfor %}
-                            </select>
-                         <!-- </div> -->
-                    <!-- </select> -->
+                    <div class="row row-cols-3 row-cols-sm-3 row-cols-lg-4">
+                        {% for speciality in specializaties %}
+                            <div>
+                                <input type="checkbox" class="form-check-input" name="specializaties" id="check-{{speciality.id}}" value="{{speciality.id}}"/>
+                                <label for="check-{{speciality.id}}">{{speciality.name}}</label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
                 </div>
+
+
 
                 <input type="number" class="form-control"  placeholder="السجل التجاري" name="commercial_register" required >
 
