@@ -1,0 +1,43 @@
+{% extends 'main/base.html' %}
+
+{% block title %}تحديث الملف الشخصي{% endblock %}
+
+{% block content %}
+<section class="container">
+    <div class="row">
+        <div class="col-lg-8 col-md-12 mx-auto">
+            <form action="{% url 'customer:update_profile' %}" method="post" class="form-control shadow-lg p-4 rounded">
+                <h2 class="text-center mb-4">تحديث الملف الشخصي</h2>
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label for="first_name" class="form-label">الإسم الأول:</label>
+                    <input type="text" id="first_name" name="first_name" class="form-control" value="{{ request.user.first_name }}" required />
+                </div>
+
+                <div class="mb-3">
+                    <label for="last_name" class="form-label">الإسم الأخير:</label>
+                    <input type="text" id="last_name" name="last_name" class="form-control" value="{{ request.user.last_name }}" required />
+                </div>
+
+                <div class="mb-3">
+                    <label for="username" class="form-label">رقم الجوال</label>
+                    <input type="username" id="username" name="username" class="form-control" value="{{ request.user.username }}" required />
+                </div>
+
+                <div class="mb-3">
+                    <label for="email" class="form-label">الإيميل:</label>
+                    <input type="email" id="email" name="email" class="form-control" value="{{ request.user.email }}" required />
+                </div>
+
+                <div class="mb-3">
+                    <label for="neighborhood" class="form-label">الحي:</label>
+                    <input type="text" id="neighborhood" name="neighborhood" class="form-control" value="{{ request.user.profilecustomer.neighborhood }}" required />
+                </div>
+
+                <button type="submit" class="btn btn-dark w-100">تحديث</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

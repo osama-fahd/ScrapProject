@@ -20,6 +20,7 @@
               <h6>رقم جوال: {{ profile.user.username }}</h6>
               <p> عنوان :  {{ profile.neighborhood }}</p>
               <p> تاريخ الانضمام : {{ profile.registration_date }}</p>
+              <a href="{% url 'customer:update_profile' %}" class="btn btn-warning">تعديل الملف</a>
             </div>
           </div>
         </div>
