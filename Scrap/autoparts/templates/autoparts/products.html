@@ -1,0 +1,102 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}{{ chosen_part.name }}{% endblock %}
+
+{% block content %}
+<section class="container">
+    <!-- Filters -->
+    <form action="{% url 'autoparts:products_view' part_id=chosen_part.id %}" method="get" class="row g-3 mb-4">
+        <div class="col-md">
+            <select name="brand" id="brandSelect" class="form-select my-auto">
+                <option value="">اختر الماركة</option>
+                {% for brand in brands %}
+                <option value="{{ brand.id }}" {% if request.GET.brand == brand.id|stringformat:'s' %} selected {% endif %}>
+                    {{ brand.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+    
+        <div class="col-md">
+            <select name="car" id="carSelect" class="form-select my-auto">
+                <option value="">اختر السيارة</option>
+                {% for car in cars %}
+                <option value="{{ car.id }}" data-brand="{{ car.brand.id }}" {% if request.GET.car == car.id|stringformat:'s' %} selected {% endif %}>
+                    {{ car.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+    
+        <div class="col-md">
+            <select name="year" class="form-select my-auto">
+                <option value="">اختر السنة</option>
+                {% for year in years %}
+                <option value="{{ year }}" {% if request.GET.year == year|stringformat:'s' %} selected {% endif %}>
+                    {{ year }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+    
+        <div class="col-md">
+            <input type="search" name="search" value="{{ request.GET.search }}" placeholder="ابحث عن قطع الغيار" class="form-control">
+        </div>
+        
+        <div class="col-md-auto">
+            <button type="submit" class="btn btn-dark w-100">بحث</button>
+        </div>
+    </form>
+    
+    <!-- Title -->
+    <h1 class="h3 mb-4">{{ chosen_part.name }}</h1>
+</section>
+<section class="container">
+    <!-- cards -->
+    <div class="row g-4">
+        {% for product in products %}
+        <div class="col-12">
+            <div class="card">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="{{ product.image.url }}" class="img-fluid rounded-start object-fit-cover h-100" alt="{{ product.name }}">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.seller.company_name }}</h5>
+                            <p class="card-text">{{ product.description }}</p>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary">{{ product.condition }}</span>
+                                <strong>{{ product.price }} ريال</strong>
+                            </div>
+                            <p class="mb-1"><small class="text-muted">موديل: {{ product.start_date }} - {{ product.end_date }}</small></p>
+                            {% if product.made %}
+                            <p class="mb-1"><small class="text-muted">الصنع: {{ product.made }}</small></p>
+                            {% endif %}
+                            {% if product.part_direction %}
+                            <p class="mb-1"><small class="text-muted">الجهة: {{ product.get_part_direction_display }}</small></p>
+                            {% endif %}
+                            <div class="mt-2">
+                                <small class="text-muted d-block mb-1">متوافق مع:</small>
+                                {% for car in product.car.all %}
+                                <span class="badge bg-secondary me-1">{{ car.brand.name }} {{ car.name }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center">
+            <p class="text-muted">لا توجد قطع غيار متوفرة</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
+
+{% block javascript %}
+<script src="{% static 'js/products.js' %}"></script>
+{% endblock %}
