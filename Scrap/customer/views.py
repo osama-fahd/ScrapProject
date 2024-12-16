@@ -5,6 +5,7 @@ from accounts.models import ProfileCustomer
 from .models import Cart, CartItem, Product
 from django.db import transaction
 from django.contrib.auth.models import User
+from sellers.models import OrderItem
 
 
 

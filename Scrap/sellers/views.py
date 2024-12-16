@@ -8,7 +8,10 @@ from django.http import HttpRequest
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.db.models import Avg
-from customer.models import Cart
+from customer.models import Cart,CartItem
+from .models import OrderItem
+from twilio.rest import Client
+from django.conf import settings
 
 
 
@@ -240,16 +243,200 @@ def seller_profile_view(request: HttpRequest, seller_id: int):
     
     return render(request, 'sellers/sellers_profiles.html', context)
 
-def order_item_view(request,cart_id:Cart):
-    cart= Cart.objects.get(pk=cart_id)
-    customer = cart.customer
+# def order_item_view(request,cart_id:Cart):
+#     cart= Cart.objects.get(pk=cart_id)
+#     customer = cart.customer
 
-    for cartitem in cart.cartitem_set.all():
-        if cartitem.product.seller.id == request.user.profileseller.id():
-            product=cartitem.product(
+#     for cartitem in cart.cartitem_set.all():
+#         if cartitem.product.seller.id == request.user.profileseller.id():
+#             product=cartitem.product(
 
-            )
+#             )
 
 
-        
 
+
+
+
+@login_required
+def seller_order_list_view(request):
+    try:
+        seller = request.user.profileseller
+    except ProfileSeller.DoesNotExist:
+        messages.error(request, "This user does not have a seller profile.")
+        return redirect("main:home_view")
+
+    pending_orders = OrderItem.objects.filter(seller=seller, status=OrderItem.Status.PENDING)
+    accepted_orders = OrderItem.objects.filter(seller=seller, status=OrderItem.Status.ACCEPTED)
+    denied_orders = OrderItem.objects.filter(seller=seller, status=OrderItem.Status.DENIED)
+
+    context = {
+        "pending_orders": pending_orders,
+        "accepted_orders": accepted_orders,
+        "denied_orders": denied_orders,
+    }
+    return render(request, "sellers/seller_orders.html", context)
+
+
+@login_required
+def deny_order_item(request, order_item_id):
+    try:
+        seller = request.user.profileseller
+    except ProfileSeller.DoesNotExist:
+        messages.error(request, "No seller profile found.")
+        return redirect("main:home_view")
+
+    order_item = get_object_or_404(OrderItem, id=order_item_id, seller=seller)
+    order_item.status = OrderItem.Status.DENIED
+    order_item.save()
+    messages.success(request, "You have denied the order.")
+    return redirect("seller:seller_order_list_view")
+
+
+@login_required
+def accepted_order_list_view(request):
+    try:
+        seller = request.user.profileseller
+    except ProfileSeller.DoesNotExist:
+        messages.error(request, "لا يوجد ملف شخصي للبائع لهذا المستخدم.")
+        return redirect("main:home_view")
+
+    accepted_orders = OrderItem.objects.filter(seller=seller, status=OrderItem.Status.ACCEPTED)
+
+    context = {
+        "accepted_orders": accepted_orders
+    }
+    return render(request, "sellers/accepted_orders.html", context)
+
+
+@login_required
+def order_detail_view(request, order_item_id):
+    try:
+        seller = request.user.profileseller
+    except ProfileSeller.DoesNotExist:
+        messages.error(request, "لا يوجد ملف شخصي للبائع لهذا المستخدم.")
+        return redirect("main:home_view")
+
+    order_item = get_object_or_404(OrderItem, id=order_item_id, seller=seller)
+    customer = order_item.customer
+    product = order_item.product
+
+    context = {
+        "order_item": order_item,
+        "customer": customer,
+        "product": product,
+    }
+    return render(request, "sellers/customer_detail.html", context)
+
+
+@login_required
+def mark_as_delivered_view(request, order_item_id):
+    try:
+        seller = request.user.profileseller
+    except ProfileSeller.DoesNotExist:
+        messages.error(request, "لا يوجد ملف شخصي للبائع لهذا المستخدم.")
+        return redirect("main:home_view")
+
+    order_item = get_object_or_404(OrderItem, id=order_item_id, seller=seller)
+    order_item.status = OrderItem.Status.DELIVERED
+    order_item.save()
+
+    messages.success(request, "تم وضع الطلب على أنه تم التوصيل.")
+    return redirect("seller:order_detail_view", order_item_id=order_item.id)
+
+
+@login_required
+def delivered_orders_history_view(request):
+    try:
+        seller = request.user.profileseller
+    except ProfileSeller.DoesNotExist:
+        messages.error(request, "لا يوجد ملف شخصي للبائع لهذا المستخدم.")
+        return redirect("main:home_view")
+
+    delivered_orders = OrderItem.objects.filter(seller=seller, status=OrderItem.Status.DELIVERED)
+
+    context = {
+        "delivered_orders": delivered_orders,
+    }
+    return render(request, "sellers/delivered_orders_history.html", context)
+
+
+def checkout(request):
+    if not request.user.is_authenticated:
+        messages.warning(request, "فقط المستخدمين المسجلين يمكنهم المتابعة إلى الدفع", "alert-warning")
+        return redirect("accounts:sign_in")
+
+    profile_customer = ProfileCustomer.objects.get(user=request.user)
+    cart = Cart.objects.get(customer=profile_customer)
+    cart_items = CartItem.objects.filter(cart=cart)
+
+    if not cart_items.exists():
+        messages.error(request, "سلة التسوق فارغة", "alert-danger")
+        return redirect("customer:view_cart")
+
+    for item in cart_items:
+        seller = item.product.seller
+        order_item = OrderItem.objects.create(
+            product=item.product,
+            customer=profile_customer,
+            seller=seller,
+            status=OrderItem.Status.PENDING
+        )
+
+        send_order_notification_to_seller(request, seller, order_item)
+
+    cart_items.delete()
+    messages.success(request, "تم إرسال الطلبات إلى البائع للمراجعة", "alert-success")
+    return redirect("customer:profile_customer")
+
+
+def send_order_notification_to_seller(request, seller: ProfileSeller, order_item: OrderItem):
+    seller_phone_number = seller.user.username
+
+    client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+
+    message_body = (
+        f"لديك طلب جديد! \n"
+        f"المنتج: {order_item.product.name}\n"
+        f"العميل: {order_item.customer.user.username}\n"
+        f"تفاصيل الطلب: {request.build_absolute_uri('/seller/orders/')}"
+    )
+
+    message = client.messages.create(
+        body=message_body,
+        from_=settings.TWILIO_FROM_NUMBER,
+        to=seller_phone_number
+    )
+
+
+@login_required
+def accept_order_item(request, order_item_id):
+    try:
+        seller = request.user.profileseller
+    except ProfileSeller.DoesNotExist:
+        messages.error(request, "No seller profile found.")
+        return redirect("main:home_view")
+
+    order_item = get_object_or_404(OrderItem, id=order_item_id, seller=seller)
+    order_item.status = OrderItem.Status.ACCEPTED
+    order_item.save()
+
+    # Notify the customer
+    send_order_status_notification_to_customer(order_item.customer, "تم قبول طلبك، الطلب قيد التوصيل")
+
+    messages.success(request, "You have accepted the order.")
+    return redirect("seller:seller_order_list_view")
+
+
+def send_order_status_notification_to_customer(customer: ProfileCustomer, status_message: str):
+    # Make sure the phone number is in E.164 format.
+    customer_phone = customer.user.username
+    client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+
+    message_body = f"حالة طلبك: {status_message}"
+
+    message = client.messages.create(
+        body=message_body,
+        from_=settings.TWILIO_FROM_NUMBER,
+        to=customer_phone
+    )
