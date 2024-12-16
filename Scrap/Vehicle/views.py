@@ -86,7 +86,7 @@ def save_cars_to_database(request: HttpRequest):
         {"car_brand_id": 3, "name": "ألنترا"},
         {"car_brand_id": 3, "name": "سوناتا"},
         {"car_brand_id": 4, "name": "مازدا-6"},
-        {"car_brand_id": 4, "name": "مازدا-9"},
+        {"car_brand_id": 4, "name": "مازدا-CX9"},
         ]
 
     for item in cars_data:

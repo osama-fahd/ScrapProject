@@ -1,0 +1,34 @@
+{% extends 'main/base.html' %}
+
+{% load static %}
+
+{% block title %}صفحة العميل {% endblock %}
+
+{% block style %}{% endblock %}
+
+{% block content %}
+ <section class="container">
+    <div class="card mb-3" style="max-width: 540px;">
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img src="" class="img-fluid rounded-start" alt="...">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h4> {{ profile.user.first_name }} {{ profile.user.last_name }}</h4>
+              <h5>الإيميل: {{ profile.user.email }}</h5>
+              <h6>رقم جوال: {{ profile.user.username }}</h6>
+              <p> عنوان :  {{ profile.neighborhood }}</p>
+              <p> تاريخ الانضمام : {{ profile.registration_date }}</p>
+              <a href="{% url 'customer:update_profile' %}" class="btn btn-warning">تعديل الملف</a>
+            </div>
+          </div>
+        </div>
+      </div>
+ </section>
+
+ <section class="container">
+    <h1>عنوان للسكشن الثاني (محتوى مختلف عن السكشن الأول)</h1>
+    <div>محتوى تجريبي محتوى تجريبي محتوى تجريبي محتوى تجريبي</div>
+ </section>
+{% endblock %}

@@ -47,6 +47,9 @@
                       </li>
                       
                       {% if request.user.is_authenticated %}
+                      <li class="nav-item">
+                        <a class="nav-link" href="{% url 'customer:view_cart' %}">سلة التسوق</a>
+                      </li>
                         <li class="nav-item d-flex">
                           <p class="text-white my-auto">
                             | مرحبا {{request.user.first_name}}
