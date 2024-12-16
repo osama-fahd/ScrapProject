@@ -27,7 +27,7 @@
                       <li class="nav-item">
                         <a class="nav-link" href="#">قطع الغيار</a>
                       </li>
-                      {% if request.user.is_authenticated and request.user|is_in_group:'sellers' %}
+                      {% if request.user.is_authenticated and request.user|is_in_group_seller:'sellers' %}
                         <li class="nav-item">
                           <a class="nav-link" href="#">صفحة البائع</a>
                         </li>
@@ -46,7 +46,7 @@
                         <a class="nav-link" href="#">تواصل معنا</a>
                       </li>
                       
-                      {% if request.user.is_authenticated %}
+                      {% if request.user.is_authenticated and request.user|is_in_group_customer:'sellers' %}
                       <li class="nav-item">
                         <a class="nav-link" href="{% url 'customer:view_cart' %}">سلة التسوق</a>
                       </li>
