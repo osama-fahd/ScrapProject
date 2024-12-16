@@ -1,7 +1,10 @@
 from django.shortcuts import render, redirect
 from django.http import HttpRequest
-from django.db import transaction
+from django.db import transaction, models
+import random
 from .models import Category, Part, Product
+from Vehicle.models import Car, Brand
+from accounts.models import ProfileSeller
 
 # Create your views here.
 def all_parts_view(request: HttpRequest):
@@ -14,12 +17,56 @@ def all_parts_view(request: HttpRequest):
 
 def products_view(request: HttpRequest, part_id):
     chosen_part = Part.objects.get(pk=part_id)
-    products = Product.objects.all().filter(part=chosen_part)
-    context = {"products": products}
+    
+    # Start with all products for this part
+    products = Product.objects.filter(part=chosen_part)
+    
+    # Get min and max years from the products
+    year_range = products.aggregate(
+        min_year=models.Min('start_date'),
+        max_year=models.Max('end_date')
+    )
+    
+    # Apply filters based on GET parameters
+    if "search" in request.GET and request.GET["search"]:
+        products = products.filter(description__contains=request.GET["search"])
+        
+    if "brand" in request.GET and request.GET["brand"]:
+        products = products.filter(car__brand_id=request.GET["brand"])
+        
+    if "car" in request.GET and request.GET["car"]:
+        products = products.filter(car__id=request.GET["car"])
+        
+    if "year" in request.GET and request.GET["year"]:
+        selected_year = int(request.GET["year"])
+        products = products.filter(
+            start_date__lte=selected_year,
+            end_date__gte=selected_year
+        )
+    
+    # Get unique cars and brands for these filtered products
+    cars = Car.objects.filter(products__in=products).distinct()
+    brands = Brand.objects.filter(car__in=cars).distinct()
+    
+    # Generate list of years for the dropdown
+    years = range(year_range['min_year'], year_range['max_year'] + 1)
+    
+    context = {
+        "chosen_part": chosen_part,
+        "products": products,
+        "brands": brands,
+        "cars": cars,
+        "years": years,
+        "selected_year": request.GET.get("year", "")
+    }
 
     return render(request, "autoparts/products.html", context)
 
 
+
+
+
+# save to the database
 @transaction.atomic
 def save_categories_to_database(request: HttpRequest):
     # First delete all existing categories and parts
@@ -33,7 +80,7 @@ def save_categories_to_database(request: HttpRequest):
 
     # Add categorizes to the database
     categories = [
-        {"name": "المحركات / المكينة والقير", "name_en": "Engine & Transmission"},
+        {"name": "المحركات والقير", "name_en": "Engine & Transmission"},
         {"name": "قطع كهربائية", "name_en": "Electrical"},
         {"name": "البودي", "name_en": "Exterior & Body"},
         {"name": "الأنوار", "name_en": "Lights"},
@@ -95,5 +142,85 @@ def save_parts_to_database(request: HttpRequest):
 
     # Bulk create all parts at once to optimize database operations
     Part.objects.bulk_create(parts_to_save)
+
+    return redirect("main:home_view")
+
+
+
+@transaction.atomic
+def save_products_to_database(request: HttpRequest):
+    # First delete all existing products
+    Product.objects.all().delete()
+    
+    # Reset the SQLite sequence
+    from django.db import connection
+    with connection.cursor() as cursor:
+        cursor.execute("DELETE FROM sqlite_sequence WHERE name='autoparts_product';")
+
+    # Parts that should have direction
+    parts_with_direction = [
+        "صدام أمامي", "صدام خلفي", "باب خلفي", "باب أمامي", 
+        "شمعة", "سطب خلفي", "كشاف",
+        "مرتبة خلفية", "مرتبة أمامية",
+        "مقصات", "عكس", "مساعد"
+    ]
+
+    # Get all parts
+    parts = Part.objects.all()
+    # Get cars for assignment
+    cars = Car.objects.all()
+    # Get a seller (you'll need to ensure this exists)
+    seller = ProfileSeller.objects.first()
+
+    conditions = ["نظيف", "شبه جديد", "نظيف جداً"]
+    made_in = ["الصين", "كوري", "اليابان"]
+    
+    products_to_create = []
+    
+    for part in parts:
+        # Create 3 products for each part
+        for i in range(3):
+            # Generate random dates within constraints
+            start_year = random.choice([2018, 2019, 2020, 2021])
+            end_year = min(start_year + random.randint(1, 3), 2024)
+            
+            # Generate image name using English characters only
+            image_name = f"product_{i + 1}_{random.randint(1000, 9999)}.jpg"
+            image_path = "products_images/default.svg" if random.choice([True, False]) else f"products_images/{image_name}"
+            
+            # Get alternative names if they exist
+            alt_names = part.alternative_name.split() if part.alternative_name else []
+            description = f"قطع غيار {part.name} " + (f"({random.choice(alt_names)})" if alt_names else "")
+            
+            # Only assign direction if part is in the direction list
+            part_direction = None
+            if part.name in parts_with_direction:
+                part_direction = random.choice([Product.PartDirection.RIGHT, Product.PartDirection.LEFT])
+            
+            product = Product(
+                part=part,
+                seller=seller,
+                name=f"{part.name} - {i + 1}",
+                part_direction=part_direction,
+                made=random.choice([*made_in, None]),
+                stock=random.randint(1, 10),
+                condition=random.choice(conditions),
+                start_date=start_year,
+                end_date=end_year,
+                price=random.randint(100, 5000),
+                delivery_cost=None,
+                description=description,
+                image=image_path
+            )
+            products_to_create.append(product)
+    
+    # Bulk create all products
+    products = Product.objects.bulk_create(products_to_create)
+    
+    # Add cars to products (since we can't do this in bulk_create with M2M)
+    for product in products:
+        # Randomly assign 1-3 cars to each product
+        product_cars = random.sample(list(cars), random.randint(1, min(3, len(cars))))
+        product.car.add(*product_cars)
 
     return redirect("main:home_view")

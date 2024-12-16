@@ -42,6 +42,7 @@ class Product(models.Model):
     start_date = models.IntegerField()
     end_date = models.IntegerField()
     price = models.IntegerField()
+    delivery_cost = models.IntegerField(blank=True, null=True)
     description = models.CharField(max_length=2000)
     image = models.ImageField(upload_to="products_images/", default="products_images/", blank=True)
 
