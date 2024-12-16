@@ -1,4 +1,5 @@
 {% load static %}
+{% load custom_tags %}
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -26,16 +27,21 @@
                       <li class="nav-item">
                         <a class="nav-link" href="#">قطع الغيار</a>
                       </li>
-                      <!-- if request.user.is_authenticated -->
-                      <li class="nav-item">
-                        <a class="nav-link" href="{% url 'accounts:seller_sign_up' %}">صفحة البائع</a>
+                      {% if request.user.is_authenticated and request.user|is_in_group:'sellers' %}
+                        <li class="nav-item">
+                          <a class="nav-link" href="#">صفحة البائع</a>
+                        </li>
+                      {% else %}
+                      <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          تسجيل الدخول للبائع
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                          <li><a class="dropdown-item" href="{% url 'accounts:seller_sign_up' %}">تسجيل عضوية جديدة</a></li>
+                          <li><a class="dropdown-item" href="{% url 'accounts:sign_in' %}?next={{request.path}}">تسجيل الدخول</a></li>
+                        </ul>
                       </li>
-                      <!--  endif  -->
-                      <!-- if request.user.is_authenticated -->
-                      <li class="nav-item">
-                        <a class="nav-link" href="#">صفحة العميل</a>
-                      </li>
-                      <!-- endif -->
+                      {% endif %}
                       <li class="nav-item">
                         <a class="nav-link" href="#">تواصل معنا</a>
                       </li>

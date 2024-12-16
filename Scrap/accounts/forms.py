@@ -5,4 +5,4 @@ from .models import ProfileSeller
 class ProfileSellerForm(forms.ModelForm):
     class Meta:
         model = ProfileSeller
-        fields = ['specializaties', 'company_name', 'google_map_address', 'address', 'commercial_register']
+        fields = ['specializaties', 'company_name', 'google_map_address', 'address', 'commercial_register', 'brands']

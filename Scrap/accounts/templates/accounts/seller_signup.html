@@ -23,11 +23,11 @@
 
                 <div class="d-flex flex-column gap-1">
                     <h5>ماهي شركات السيارات المتخصص بها؟</h5>
-                    <div class="row row-cols-3 row-cols-sm-3 row-cols-lg-4">
+                    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-3">
                         {% for brand in brands %}
                         <div>
-                            <input type="checkbox" class="form-check-input" name="brands" id="check-{{brand.id}}" value="{{brand.id}}"/>
-                            <label for="check-{{brand.id}}">{{brand.name}}</label>
+                            <input type="checkbox" class="form-check-input" name="brands" id="check-b-{{brand.id}}" value="{{brand.id}}"/>
+                            <label for="check-b-{{brand.id}}">{{brand.name}}</label>
                         </div>
                         {% endfor %}
                     </div>

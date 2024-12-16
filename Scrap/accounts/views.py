@@ -1,13 +1,13 @@
 from django.shortcuts import render, redirect
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.db import IntegrityError, transaction
 
-from .models import ProfileCustomer, ProfileSeller
+from .models import ProfileCustomer
 from .forms import ProfileSellerForm
 
 from Vehicle.models import Brand
@@ -25,6 +25,12 @@ def sign_up(request: HttpRequest):
                 #Creating Customer Profile 
                 profile_customer = ProfileCustomer(user=new_user, neighborhood=request.POST["neighborhood"])
                 profile_customer.save()
+                
+                if not new_user.groups.filter(name='customers').exists():
+                    group = Group.objects.get(name="customers")
+                    new_user.groups.add(group)
+                else:
+                    print("user in customers group")
                 
             messages.success(request, "تم التسجيل بنجاح!", "alert-success")
             return redirect("accounts:sign_in")
@@ -59,13 +65,20 @@ def seller_sign_up(request: HttpRequest):
                     profile.user = new_user
                     profile.save()
                     
+                    if not new_user.groups.filter(name='sellers').exists():
+                        group = Group.objects.get(name="sellers")
+                        new_user.groups.add(group)
+                    else:
+                        print("user in sellers group")
+                    
                     messages.success(request, "تم التسجيل بنجاح!", "alert-success")
                     return redirect("accounts:sign_in")
                 else:
                     messages.error(request, "يرجى تصحيح الأخطاء في النموذج.", "alert-danger")
 
-        except IntegrityError:
+        except IntegrityError as e:
             messages.error(request, "الرقم مسجل مسبقًا!", "alert-danger")
+            print(e)
         except Exception as e:
             messages.error(request, "حصل خطأ، حاول مرة اخرى!", "alert-danger")
             print(e)
