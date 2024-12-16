@@ -1,0 +1,38 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Delete Product{% endblock %}
+
+{% block style %}
+<style>
+    .delete-container {
+        max-width: 600px;
+        margin: auto;
+        text-align: center;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        background-color: #f8f9fa;
+    }
+    .delete-container h2 {
+        margin-bottom: 20px;
+    }
+    .delete-container .btn {
+        margin: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="delete-container">
+    <h2>Are you sure you want to delete the product?</h2>
+    <p><strong>Product:</strong> {{ product.part.name }}</p>
+    <p><strong>Description:</strong> {{ product.description }}</p>
+    <p><strong>Price:</strong> {{ product.price }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a href="{% url 'seller:seller_dashboard' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

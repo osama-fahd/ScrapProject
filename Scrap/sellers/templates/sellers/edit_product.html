@@ -1,0 +1,79 @@
+{% extends 'main/base.html' %}
+
+{% load static %}
+
+{% block title %}تعديل القطعة{% endblock %}
+
+
+{% block content %}
+<section class="container">
+    <div class="row">
+        <div class="col-11 col-lg-6 form-center">
+            <form action="{% url 'seller:update_product' product.id %}" method="post" enctype="multipart/form-data" class="d-flex flex-column gap-2">
+                <h1>تعديل قطعة</h1>
+                {% csrf_token %}
+                
+                <select name="category" class="form-select" required>
+                    <option value="">Select category</option>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}" {% if product.part.part_category.id == category.id %}selected{% endif %}>{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+
+                <select name="part" class="form-select" required>
+                    <option value="">Select part</option>
+                    {% for part in parts %}
+                        <option value="{{ part.id }}" {% if product.part.id == part.id %}selected{% endif %}>{{ part.name }}</option>
+                    {% endfor %}
+                </select>
+
+                <div class="part-section">
+                    <div class="d-flex flex-wrap gap-2 align-items-center">
+                        <select name="car" class="form-select" multiple required>
+                            <option value="">Select car</option>
+                            {% for car in cars %}
+                                <option value="{{ car.id }}" {% if car.id in selected_cars %}selected{% endif %}>{{ car.name }}</option>
+                            {% endfor %}
+                        </select>
+
+                        <select name="part_direction" class="form-select" required>
+                            <option value="">يرجى الاختيار</option>
+                            {% for value, label in part_directions %}
+                                <option value="{{ value }}" {% if product.part_direction == value %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+           
+                        <input type="number" name="stock" class="form-control w-full" placeholder="الكمية" value="{{ product.stock }}" required />
+      
+                        <input type="text" name="condition" class="form-control" placeholder="حالة القطعة" value="{{ product.condition }}" required />
+
+                        <input type="text" name="made" class="form-control" placeholder="وين صنعت" value="{{ product.made }}" required />
+                        
+                        <input type="number" name="start_date" class="form-control" placeholder="صالحة من موديل" value="{{ product.start_date }}" required maxlength="4" minlength="4" />
+                        <span>TO</span>
+                        <input type="number" name="end_date" class="form-control" placeholder="الى هذا الموديل" value="{{ product.end_date }}" required maxlength="4" minlength="4" />
+        
+                        <div> 
+                            <h5>تفاصيل القطعة</h5>
+                    
+                            <textarea name="description" id="" class="form-control" placeholder="تفاصيل القطعة" required>{{ product.description }}</textarea>
+        
+                            <input type="number" name="price" class="form-control" placeholder="Price $$$" value="{{ product.price }}" required />
+                        </div>
+
+                        <div>
+                            <h5> هل ترغب في اضافة صورة؟:</h5>
+                            <input type="file" name="logo" class="form-control" accept="images/" >
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}" alt="{{ product.part.name }}" class="img-thumbnail mt-2" width="150">
+                            {% endif %}
+                        </div>
+        
+                        <button type="submit" class="btn btn-dark">Update Part</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
