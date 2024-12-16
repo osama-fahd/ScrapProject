@@ -50,7 +50,7 @@
     </form>
     
     <!-- Title -->
-    <h1 class="h3 mb-4">{{ chosen_part.name }}</h1>
+    <h1 class="h3 mb-4">تصنيف القطع: {{ chosen_part.name }}</h1>
 </section>
 <section class="container">
     <!-- cards -->
@@ -59,11 +59,11 @@
         <div class="col-12">
             <div class="card">
                 <div class="row g-0">
-                    <div class="col-md-4">
-                        <img src="{{ product.image.url }}" class="img-fluid rounded-start object-fit-cover h-100" alt="{{ product.name }}">
+                    <div class="col-md-4 product-card-image">
+                        <img src="{{ product.get_display_image_url }}" class="" alt="{{ product.name }}">
                     </div>
                     <div class="col-md-8">
-                        <div class="card-body">
+                        <div class="card-body h-100 d-flex flex-column justify-content-between">
                             <h5 class="card-title">{{ product.seller.company_name }}</h5>
                             <p class="card-text">{{ product.description }}</p>
                             <div class="d-flex justify-content-between align-items-center mb-2">
@@ -82,6 +82,9 @@
                                 {% for car in product.car.all %}
                                 <span class="badge bg-secondary me-1">{{ car.brand.name }} {{ car.name }}</span>
                                 {% endfor %}
+                            </div>
+                            <div class="mt-4">
+                                <a href="{% url 'customer:add_cart' product.id %}" class="btn btn-dark w-100">اضافة للسلة</a>
                             </div>
                         </div>
                     </div>

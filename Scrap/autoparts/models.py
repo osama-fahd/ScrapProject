@@ -44,22 +44,28 @@ class Product(models.Model):
     price = models.IntegerField()
     delivery_cost = models.IntegerField(blank=True, null=True)
     description = models.CharField(max_length=2000)
-    image = models.ImageField(upload_to="products_images/", default="products_images/", blank=True)
+    image = models.ImageField(upload_to="products_images/", default="products_images/default.svg", blank=True)
+
+    # method that returns part image if product has no image or has default.svg
+    def get_display_image_url(self):
+        if not self.image or self.image.name == 'products_images/default.svg':
+            return self.part.image.url
+        return self.image.url    
 
     def __str__(self) -> str:
         return self.name
 
 
     # class PartCategory(models.TextChoices):
-    #     ENGINES = "Engine & Transmission", "المكينة والقير"
-    #     ELECTRICALS = "Electircal",  "قطع كهربائية"
-    #     EXTERIORS = "Exterior & Body", "البودي"
-    #     LIGHTS = "lights", "الأنوار"
-    #     COOLIINGS = "Cooling & Heating", "التبريد والتكييف"
-    #     INTERIOIR = "Interior & Accessories", "الداخلية والاكسسوارت"
-    #     SUSPENSIONS = "Suspensions", "الميزانية / نظام التعليق"
-    #     MECHANICALS = "Mechanical", "قطع ميكانيكية"
-    #     UNCATEGORIZED = "Uncategorized", "قطع غير مصنفة"
+        # ENGINES = "Engine & Transmission", "المكينة والقير"
+        # ELECTRICALS = "Electircal",  "قطع كهربائية"
+        # EXTERIORS = "Exterior & Body", "البودي"
+        # LIGHTS = "lights", "الأنوار"
+        # COOLIINGS = "Cooling & Heating", "التبريد والتكييف"
+        # INTERIOIR = "Interior & Accessories", "الداخلية والاكسسوارت"
+        # SUSPENSIONS = "Suspensions", "الميزانية / نظام التعليق"
+        # MECHANICALS = "Mechanical", "قطع ميكانيكية"
+        # UNCATEGORIZED = "Uncategorized", "قطع غير مصنفة"
 
 
     # Engine = Part.objects.all().filter(part_category=Part.PartCategory.ENGINES)
