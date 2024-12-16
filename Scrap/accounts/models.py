@@ -37,6 +37,7 @@ class ProfileSeller(models.Model):
     commercial_register = models.IntegerField(max_length=10)
     brands = models.ManyToManyField(Brand)
     
+    
     def __str__(self) -> str:
         return f'{self.company_name} - {self.user.username}'
     

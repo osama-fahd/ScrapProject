@@ -14,6 +14,7 @@ class OrderItem(models.Model):
         PENDING = 'PENDING', 'انتظار مراجعة البائع'
         ACCEPTED = 'ACCEPTED', 'قيد التوصيل'
         # IN_PROGRESS = 'IN_PROGRESS', 'قيد العمل'
+        DELIVERED = 'DELIVERED', 'تم التوصيل'
         DENIED = 'DENIED', 'رفض'
     
     status = models.CharField(
