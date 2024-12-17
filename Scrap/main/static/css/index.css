@@ -1,7 +1,89 @@
+/* start of new sytling */
+
+/* Updated hero section styles */
+.hero {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.hero .row {
+    width: 100vw;  /* Full viewport width */
+    margin: 0;     /* Remove default row margins */
+}
+
 .hero .col {
+    height: 60vh;  /* Increased height for better impact */
+    margin: 0;     /* Remove any margins */
+    padding: 0;    /* Remove any padding */
+}
+
+.hero-text {
+    color: #fff;
+    height: 100%;
+    justify-content: center;
+    padding: 3rem;
+}
+
+.hero-title {
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 1.5rem;
+    font-size: 3.5rem;
+}
+
+.hero img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.hero-text .btn-light {
+    background-color: #fff;
+    color: #ff9800;
+    border: 2px solid #fff;
+    padding: 0.75rem 2rem;
+    margin-top: 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.hero-text .btn-light:hover {
+    background-color: transparent;
+    color: #fff;
+}
+
+.hero-text p {
+    font-size: 1.2rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+}
+
+
+/*** media quries ***/
+@media (max-width: 768px) {
+    .hero .col {
+        height: 50vh;
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-text {
+        padding: 1.5rem;
+    }
+}
+
+/* end of new styling */
+
+
+/* start of old styling */
+/* .hero .col {
     height: 40vh;
     margin-bottom: auto;
-    background-color: #000;
+    background-color: #ffb700cb;
 }
 
 .hero img {
@@ -18,4 +100,5 @@
     color: #fff;
     height: 100%;
     justify-content: center;
-}
+} */
+/* end of old sytling */
