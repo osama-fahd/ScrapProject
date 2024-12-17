@@ -5,6 +5,8 @@ import random
 from .models import Category, Part, Product
 from Vehicle.models import Car, Brand
 from accounts.models import ProfileSeller
+from django.core.paginator import Paginator
+from django.contrib import messages
 
 # Create your views here.
 def all_parts_view(request: HttpRequest):
@@ -20,6 +22,12 @@ def products_view(request: HttpRequest, part_id):
     
     # Start with all products for this part
     products = Product.objects.filter(part=chosen_part)
+
+    # Show no products availble for this part if there is no products
+    if not products:
+        messages.warning(request, "لا تتوفر منتجات معروضة حالياً ضمن القطعة المختارة، بامكانكم تصفح باقي القطع", "alert-warning")
+        return redirect("main:home_view")
+
     
     # Get min and max years from the products
     year_range = products.aggregate(
