@@ -23,7 +23,11 @@
                             <img src="{{ item.product.part.image.url }}" alt="{{ item.product.name }}" style="width: 80px; height: auto;">
                         </td>
                         <td>{{ item.product.part.name }}</td>
-                        <td>{{ item.quantity }}</td>
+                        <td>
+                            <a href="{% url 'customer:increase_quantity' item.id %}" class="btn btn-sm btn-success">+</a>
+                            <span>{{ item.quantity }}</span>
+                            <a href="{% url 'customer:decrease_quantity' item.id %}" class="btn btn-sm btn-danger">-</a>
+                        </td>
                         <td><span class="text-success">${{ item.product.price }}</span></td>
                         <td>
                             <form method="post" action="{% url 'customer:remove_from_cart' item.id %}" style="display: inline;">
@@ -43,7 +47,7 @@
         </div>
 
         <div class="d-flex justify-content-end mt-4">
-            <button type="submit" class="btn btn-success btn-sm " style="width: 200px;">شراء</button>
+            <button type="submit" class="btn btn-success btn-sm " style="width: 200px;"><a href="{% url 'seller:checkout' %}" >شراء</a></button>
         </div>
 
     {% else %}
