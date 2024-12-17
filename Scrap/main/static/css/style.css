@@ -1,6 +1,7 @@
 /*** general ***/   /* ادناه البنود العامة غير المرتبطة بهيدر او مين او فوتر */
 body {
     background-color: #fee8d36e;
+
 }
 
 .wrapper {
@@ -10,7 +11,8 @@ body {
 /* buttons & links & tables-head */
 
 nav {
-    background-color: #ffb700cb;
+    /* background-color: #ffb700cb; */
+    background-color: #fbb608c1;
 }
 
 nav a {}
@@ -104,8 +106,8 @@ form select {
 
 footer {
     /* background-color: #ffce47cb; */
-    /* background-color: #fbb608c1; */
-    background-color: #ffb700cb;
+    background-color: #fbb608c1;
+    /* background-color: #ffb700cb; */
 
     margin-top: 2rem;
     margin-bottom: 0;

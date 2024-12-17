@@ -4,7 +4,10 @@
 
 {% block title %}Seller Inventory{% endblock %}
 
-{% block style %}<link rel="stylesheet" href="{% static 'css/example.css' %}">{% endblock %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/seller_dashboard.css' %}">
+<!-- <link rel="stylesheet" href="{% static 'css/example.css' %}"> -->
+{% endblock %}
 
 {% block content %}
 <section class="container">
@@ -112,7 +115,7 @@
         </table>
     </div>
 
-    <nav aria-label="Page navigation" class="d-flex justify-content-center">
+    <div aria-label="Page navigation" class="d-flex justify-content-center">
         <ul class="pagination">
             {% if page_obj.has_previous %}
             <li class="page-item">
@@ -134,7 +137,7 @@
             </li>
             {% endif %}
         </ul>
-    </nav>
+    </div>
 </section>
 {% endblock %}
 

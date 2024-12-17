@@ -19,8 +19,8 @@ class OrderItem(models.Model):
     
     status = models.CharField(
         max_length=20,choices=Status.choices,default=Status.PENDING)
-    # product = models.ForeignKey(
-        # Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE)
     customer = models.ForeignKey(
         ProfileCustomer, null=True, on_delete=models.PROTECT)
     seller = models.ForeignKey(
