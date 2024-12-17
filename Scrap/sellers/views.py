@@ -12,6 +12,12 @@ from customer.models import Cart,CartItem
 from .models import OrderItem
 from twilio.rest import Client
 from django.conf import settings
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from twilio.request_validator import RequestValidator
+import json
+from twilio.twiml.messaging_response import MessagingResponse
+
 
 
 
@@ -383,6 +389,7 @@ def checkout(request):
             status=OrderItem.Status.PENDING
         )
 
+        # Pass request to the notification function so we can build absolute URI
         send_order_notification_to_seller(request, seller, order_item)
 
     cart_items.delete()
@@ -391,21 +398,21 @@ def checkout(request):
 
 
 def send_order_notification_to_seller(request, seller: ProfileSeller, order_item: OrderItem):
-    seller_phone_number = seller.user.username
-
+    seller_phone_number = str(seller.phone_number)  # Ensure phone number is in E.164 format
     client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
 
     message_body = (
-        f"لديك طلب جديد! \n"
-        f"المنتج: {order_item.product.name}\n"
+        f"لديك طلب جديد!\n"
+        f"المنتج: {order_item.product.part}\n"
         f"العميل: {order_item.customer.user.username}\n"
         f"تفاصيل الطلب: {request.build_absolute_uri('/seller/orders/')}"
     )
 
+    # Use Twilio WhatsApp channel
     message = client.messages.create(
         body=message_body,
-        from_=settings.TWILIO_FROM_NUMBER,
-        to=seller_phone_number
+        from_=settings.TWILIO_WHATSAPP_FROM,
+        to=f"whatsapp:{seller_phone_number}"  
     )
 
 
@@ -429,14 +436,43 @@ def accept_order_item(request, order_item_id):
 
 
 def send_order_status_notification_to_customer(customer: ProfileCustomer, status_message: str):
-    # Make sure the phone number is in E.164 format.
-    customer_phone = customer.user.username
+    customer_phone = str(customer.phone_number)
     client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
 
     message_body = f"حالة طلبك: {status_message}"
 
     message = client.messages.create(
         body=message_body,
-        from_=settings.TWILIO_FROM_NUMBER,
-        to=customer_phone
+        from_=settings.TWILIO_WHATSAPP_FROM,
+        to=f"whatsapp:{customer_phone}"  
     )
+
+
+@csrf_exempt
+def handle_whatsapp_message(request):
+    if request.method == "POST":
+        # Parse incoming Twilio data
+        from_number = request.POST.get("From")  # WhatsApp number of the sender
+        body = request.POST.get("Body")  # Message content sent by the user
+        
+        # Debug print (optional)
+        print(f"Message from {from_number}: {body}")
+        
+        # Process the message
+        if body.lower().strip() == "accept":
+             response_message = "You have accepted the request. Thank you!"
+            # Add logic to update your order status here
+        elif body.lower().strip() == "deny":
+            # Handle deny action
+            response_message = "You have denied the request."
+            # Add logic to update your order status here
+        else:
+            # Handle invalid input
+            response_message = "Invalid input. Please reply with 'accept' or 'deny'."
+        
+        # Send a reply to the user
+        twiml_response = MessagingResponse()
+        twiml_response.message(response_message)
+        return JsonResponse(str(twiml_response), safe=False)
+
+    return JsonResponse({"error": "Invalid method"}, status=400)    
