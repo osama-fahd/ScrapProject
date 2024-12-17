@@ -390,7 +390,7 @@ def checkout(request):
         )
 
         # Pass request to the notification function so we can build absolute URI
-        send_order_notification_to_seller(request, seller, order_item)
+        # send_order_notification_to_seller(request, seller, order_item)
 
     cart_items.delete()
     messages.success(request, "تم إرسال الطلبات إلى البائع للمراجعة", "alert-success")
@@ -429,7 +429,7 @@ def accept_order_item(request, order_item_id):
     order_item.save()
 
     # Notify the customer
-    send_order_status_notification_to_customer(order_item.customer, "تم قبول طلبك، الطلب قيد التوصيل")
+    # send_order_status_notification_to_customer(order_item.customer, "تم قبول طلبك، الطلب قيد التوصيل")
 
     messages.success(request, "You have accepted the order.")
     return redirect("seller:seller_order_list_view")
