@@ -1,15 +1,13 @@
+import phonenumbers
+from phonenumbers import NumberParseException
 from django.shortcuts import render, redirect
 from django.http import HttpRequest
-
 from django.contrib.auth.models import User, Group
-
-from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.db import IntegrityError, transaction
-
-from .models import ProfileCustomer
-from .forms import ProfileSellerForm
-
+from django.contrib.auth import authenticate, login, logout
+from accounts.models import ProfileSeller
+from autoparts.models import Category
 from Vehicle.models import Brand
 
 from autoparts.models import Category
@@ -50,15 +48,14 @@ def sign_up(request: HttpRequest):
                                                     last_name=last_name)
 
                 
-                #Creating Customer Profile 
-                profile_customer = ProfileCustomer(user=new_user, neighborhood=request.POST["neighborhood"])
+                profile_customer = ProfileCustomer(user=new_user, neighborhood=neighborhood, phone_number=e164_number)
                 profile_customer.save()
                 
                 if not new_user.groups.filter(name='customers').exists():
                     group = Group.objects.get(name="customers")
                     new_user.groups.add(group)
                 else:
-                    print("user in customers group")
+                    print("User already in 'customers' group")
                 
                 messages.success(request, "تم التسجيل بنجاح!", "alert-success")
                 return redirect("accounts:sign_in")
@@ -74,11 +71,7 @@ def sign_up(request: HttpRequest):
 
     return render(request, "accounts/signup.html")
 
-
-def seller_sign_up(request: HttpRequest):
-    brands = Brand.objects.all()
-    specializaties  = Category.objects.all()
-    
+def sign_in(request: HttpRequest):
     if request.method == "POST":
         phone_number = request.POST.get("username")
         password = request.POST.get("password")
@@ -167,16 +160,12 @@ def sign_in(request: HttpRequest):
     return render(request, "accounts/signin.html")
 
 
-
 def log_out(request: HttpRequest):
 
     logout(request)
     messages.success(request, "تم تسجيل الخروج بنجاح!", "alert-warning")
 
     return redirect(request.GET.get("next", "/"))
-
-
-
 
 # def update_user_profile(request:HttpRequest):
 

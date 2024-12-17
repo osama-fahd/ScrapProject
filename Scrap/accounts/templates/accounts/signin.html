@@ -1,14 +1,18 @@
 {% extends 'main/base.html' %}
 
-{% block title %}  تسجيل دخول {% endblock %}
+{% block title %} تسجيل دخول {% endblock %}
 
-{% block style %}{% endblock %}
+ 
 
 {% block content %}
- <section class="container">
-     <div class="row">
-         <div class="col-lg-8 col-md-12 form-center">
-             <form action="{% url 'accounts:sign_in' %}{% if 'next' in request.GET %}?next={{request.GET.next}}{% endif %}" method="post" enctype="multipart/form-data" class="d-flex flex-column gap-3">
+<section class="container">
+    <div class="row">
+        <div class="col-lg-8 col-md-12 form-center">
+            <form 
+                action="{% url 'accounts:sign_in' %}{% if 'next' in request.GET %}?next={{request.GET.next}}{% endif %}" 
+                method="post" 
+                class="d-flex flex-column gap-3"
+            >
                 <h1> تسجيل الدخول </h1>
                 {% csrf_token %}
                 <div>
@@ -33,14 +37,22 @@
                     </div>
                 </div>
 
-                <div>
+                 <div>
                     <h5> الرمز السري:</h5>
-                    <input type="password" class="form-control"  placeholder="الرمز السري" name="password">
+                    <input 
+                        type="password" 
+                        class="form-control" 
+                        placeholder="الرمز السري" 
+                        name="password" 
+                        required 
+                        minlength="8" 
+                        title="يجب أن يكون الرمز السري على الأقل 8 أحرف"
+                    >
                 </div>
    
                 <input type="submit" class="btn btn-custom" value="تسجيل">
             </form>
         </div>
     </div>
- </section>
+</section>
 {% endblock %}
