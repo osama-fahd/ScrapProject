@@ -1,7 +1,28 @@
 /*** general ***/   /* ادناه البنود العامة غير المرتبطة بهيدر او مين او فوتر */
 body {
     background-color: #fee8d36e;
+    font-family: "Fustat", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+}
 
+
+h1 {
+    font-weight: 800;
+    color: #fbca08 !important;
+    text-shadow: 1px 1px 1px rgb(255, 136, 0); 
+}
+
+h2, h3 {
+    font-weight: 800;
+}
+
+.fustat_heading {
+  font-family: "Fustat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
 }
 
 .wrapper {
@@ -15,7 +36,9 @@ nav {
     background-color: #fbb608c1;
 }
 
-nav a {}
+nav a {
+    font-size: 20px;
+}
 
 a {
     text-decoration: none !important;
@@ -23,23 +46,24 @@ a {
 }
 
 a.main-link {
-    color: #000 !important;
+    color: #000000 !important;
 }
 
 a:hover {
-    text-decoration: underline !important;
-    color: #007BFF !important;
+    /* text-decoration: underline !important; */
+    /* color: #ffe8ae !important; */
+    transform: scale(1.02);
 }
 
 
 /* Change the main colors */
 .btn-custom, .tables-custom, .thead-custom, .div-custom {
-    background-color: #ff9800;
-    border-color: #ff9800;
+    background-color: #ff9900c3;
+    border-color: #ff9900;
     color: #fff;  /* for text color */
 }
 .btn-custom:hover {
-    background-color: #f57c00; /* slightly darker shade for hover */
+    background-color: #ff9900; /* slightly darker shade for hover */
     border-color: #f57c00;
 }
 

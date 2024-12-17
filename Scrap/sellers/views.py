@@ -261,9 +261,6 @@ def seller_profile_view(request: HttpRequest, seller_id: int):
 
 
 
-
-
-
 @login_required
 def seller_order_list_view(request):
     try:

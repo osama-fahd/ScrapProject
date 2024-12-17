@@ -14,13 +14,41 @@ from Vehicle.models import Brand
 
 from autoparts.models import Category
 
+from django.core.validators import RegexValidator
+from django.core.exceptions import ValidationError
+
+import phonenumbers
+
 def sign_up(request: HttpRequest):
     if request.method == "POST":
-
+        phone_number = request.POST.get("username")
+        password = request.POST.get("password")
+        email = request.POST.get("email", "")
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
+        
+        phone_regex = RegexValidator(
+            regex=r'^05\d{8}$',
+            message="رقم الجوال يجب ان يبدأ ب05 وأن يحتوي 10 ارقام"
+        )
+        
         try:
+            phone_regex(phone_number)
+            
+            parsed_phone = phonenumbers.parse(phone_number, "SA") 
+            e164_phone = phonenumbers.format_number(parsed_phone, phonenumbers.PhoneNumberFormat.E164)
+            
+            if User.objects.filter(username=e164_phone).exists():
+                messages.error(request, "الرقم مسجل مسبقًا!", "alert-danger")
+                return render(request, "accounts/signup.html")
+            
             with transaction.atomic():
-                new_user = User.objects.create_user(username=request.POST["username"],password=request.POST["password"],email=request.POST["email"], first_name=request.POST["first_name"], last_name=request.POST["last_name"])
-                new_user.save()
+                new_user = User.objects.create_user(username=e164_phone,
+                                                    password=password,
+                                                    email=email, 
+                                                    first_name=first_name, 
+                                                    last_name=last_name)
+
                 
                 #Creating Customer Profile 
                 profile_customer = ProfileCustomer(user=new_user, neighborhood=request.POST["neighborhood"])
@@ -32,10 +60,14 @@ def sign_up(request: HttpRequest):
                 else:
                     print("user in customers group")
                 
-            messages.success(request, "تم التسجيل بنجاح!", "alert-success")
-            return redirect("accounts:sign_in")
-        except IntegrityError as e:
-            messages.error(request, "الرقم مسجل مسبقًا!", "alert-danger")
+                messages.success(request, "تم التسجيل بنجاح!", "alert-success")
+                return redirect("accounts:sign_in")
+        except ValidationError as e:
+            messages.error(request, "رقم الجوال يجب ان يبدأ ب05 وأن يحتوي 10 ارقام", "alert-danger")
+            # return render(request, "accounts/signup.html")
+        except phonenumbers.NumberParseException:
+            messages.error(request, "رقم الجوال يجب ان يبدأ ب05 وأن يحتوي 10 ارقام", "alert-danger")
+            # return render(request, "accounts/signup.html")
         except Exception as e:
             messages.error(request, "حصل خطأ، حاول مرة اخرى!", "alert-danger")
             print(e)
@@ -48,14 +80,32 @@ def seller_sign_up(request: HttpRequest):
     specializaties  = Category.objects.all()
     
     if request.method == "POST":
+        phone_number = request.POST.get("username")
+        password = request.POST.get("password")
+        first_name = request.POST.get("first_name")
+        
+        phone_regex = RegexValidator(
+            regex=r'^05\d{8}$',
+            message="رقم الجوال يجب ان يبدأ ب05 وأن يحتوي 10 ارقام"
+        )
+        
         try:
+            phone_regex(phone_number)
+            
+            parsed_phone = phonenumbers.parse(phone_number, "SA") 
+            e164_phone = phonenumbers.format_number(parsed_phone, phonenumbers.PhoneNumberFormat.E164)
+            
+            if User.objects.filter(username=e164_phone).exists():
+                messages.error(request, "الرقم مسجل مسبقًا!", "alert-danger")
+                return render(request, "accounts/seller_signup.html", {
+                    'brands': brands, 
+                    'specializaties': specializaties
+                })
+                
             with transaction.atomic():
-                # Create the user
-                new_user = User.objects.create_user(
-                    username=request.POST["username"],
-                    password=request.POST["password"],
-                    first_name=request.POST["first_name"]
-                )
+                new_user = User.objects.create_user(username=e164_phone,
+                                                    password=password,
+                                                    first_name=first_name)
                 
                 # Create seller profile form instance
                 seller_form = ProfileSellerForm(request.POST)
@@ -76,9 +126,10 @@ def seller_sign_up(request: HttpRequest):
                 else:
                     messages.error(request, "يرجى تصحيح الأخطاء في النموذج.", "alert-danger")
 
-        except IntegrityError as e:
-            messages.error(request, "الرقم مسجل مسبقًا!", "alert-danger")
-            print(e)
+        except ValidationError as e:
+            messages.error(request, "رقم الجوال يجب ان يبدأ ب05 وأن يحتوي 10 ارقام", "alert-danger")
+        except phonenumbers.NumberParseException:
+            messages.error(request, "رقم الجوال يجب ان يبدأ ب05 وأن يحتوي 10 ارقام", "alert-danger")
         except Exception as e:
             messages.error(request, "حصل خطأ، حاول مرة اخرى!", "alert-danger")
             print(e)
@@ -89,17 +140,29 @@ def seller_sign_up(request: HttpRequest):
     })
 
 
-
-def sign_in(request:HttpRequest):
+def sign_in(request: HttpRequest):
     if request.method == "POST":
-        user = authenticate(request, username=request.POST["username"], password=request.POST["password"])
+        phone_number = request.POST.get("username")
+        password = request.POST.get("password")
+        notify = request.POST.get("notify") == "1" 
 
-        if user:
-            login(request, user)
-            messages.success(request, "تم تسجيل الدخول بنجاح", "alert-success")
-            return redirect(request.GET.get("next", "/"))
-        else:
-            messages.error(request, "حصل خطأ، حاول مرة اخرى!", "alert-danger")
+        try:
+            if notify:
+                parsed_phone = phonenumbers.parse(phone_number, "SA")  
+                e164_phone = phonenumbers.format_number(parsed_phone, phonenumbers.PhoneNumberFormat.E164)
+
+                user = authenticate(request, username=e164_phone, password=password)
+            else:
+                user = authenticate(request, username=phone_number, password=password)
+
+            if user is not None:
+                login(request, user)
+                messages.success(request, "تم تسجيل الدخول بنجاح", "alert-success")
+                return redirect(request.GET.get("next", "/"))
+            else:
+                messages.error(request, "رقم الجوال أو كلمة المرور غير صحيحة", "alert-danger")
+        except phonenumbers.NumberParseException:
+            messages.error(request, "رقم الجوال غير صالح. يرجى إدخال رقم يبدأ بـ '05' من 10 أرقام.", "alert-danger")
 
     return render(request, "accounts/signin.html")
 

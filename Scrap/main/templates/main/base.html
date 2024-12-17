@@ -4,20 +4,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% endblock %}</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Faculty+Glyphic&family=Funnel+Display:wght@300..800&family=Fustat:wght@200..800&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Phudu&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Spicy+Rice&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
     <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+    <title>{% block title %}{% endblock %}</title>
+
     {% block style %}{% endblock %}
 </head>
 <body>
     <div class="wrapper d-flex flex-column justify-content-between">
         <header class="sticky-top">
-            <nav class="navbar navbar-expand-lg pt-4 pb-4">
+            <nav class="navbar navbar-expand-lg pt-3 pb-3">
                 <div class="container-fluid">
-                  <a class="navbar-brand" href="{% url 'main:home_view' %}">سكراب</a>
+                  <a class="navbar-brand" href="{% url 'main:home_view' %}">
+                    <h3 class="fustat_heading">
+                      سكراب
+                    </h3>
+                  </a>
                   <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                   </button>
@@ -26,16 +35,35 @@
                       <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="{% url 'main:home_view' %}">الصفحة الرئيسة</a>
                       </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="#">قطع الغيار</a>
-                      </li>
-                      {% if request.user.is_authenticated and request.user|is_in_group_seller:'sellers' %}
+                      {% if request.user.is_authenticated and request.user|is_in_group_customer %}
+                      <li class="nav-item d-flex">
+                        <h5 class="text-white my-auto">
+                          | مرحبا {{request.user.first_name}} |
+                          <!-- request.user.username -->
+                        </h5>
+                        
                         <li class="nav-item">
-                          <a class="nav-link" href="{% url 'seller:seller_dashboard' %}">صفحة البائع</a>
+                          <a class="nav-link active" href="{% url 'customer:view_cart' %}">سلة التسوق</a>
                         </li>
-                      {% else %}
+
+                        <li class="nav-item">
+                          <a class="nav-link active" href="#"> الطلبات</a>
+                        </li>
+                      </li>
+
+                      {% endif %}
+                      <li class="nav-item">
+                        <a class="nav-link active" href="#">قطع الغيار</a>
+                      </li>
+                      {% if request.user.is_authenticated and request.user|is_in_group_seller %}
+                        <li class="nav-item">
+                          <a class="nav-link active" href="{% url 'seller:seller_dashboard' %}">صفحة البائع</a>
+                        </li>
+                      {% endif %}
+
+                      {% if not request.user.is_authenticated %}
                       <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                           تسجيل الدخول للبائع
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -45,28 +73,17 @@
                       </li>
                       {% endif %}
                       <li class="nav-item">
-                        <a class="nav-link" href="#">تواصل معنا</a>
+                        <a class="nav-link active" href="#">تواصل معنا</a>
                       </li>
                       
-                      {% if request.user.is_authenticated and request.user|is_in_group_customer:'sellers' %}
-                      <li class="nav-item">
-                        <a class="nav-link" href="{% url 'customer:view_cart' %}">سلة التسوق</a>
-                      </li>
-                        <li class="nav-item d-flex">
-                          <p class="text-white my-auto">
-                            | مرحبا {{request.user.first_name}}
-                            <!-- request.user.username -->
-                            </p>
-                        </li>
-                      {% endif %}
                       <!-- ملاحظة تم اخفاء تسجيل الدخول باستخدام ديسبلي مؤقتا -->
                       {% if request.user.is_authenticated %}
                         <li class="nav-item">
-                          <a class="nav-link" href="{% url 'accounts:log_out' %}">تسجيل الخروج</a>
+                          <a class="nav-link active" href="{% url 'accounts:log_out' %}">تسجيل الخروج</a>
                         </li>
                       {% else %}
                         <li class="nav-item dropdown">
-                          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             تسجيل\تسجيل الدخول
                           </a>
                           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">

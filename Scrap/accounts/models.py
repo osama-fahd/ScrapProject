@@ -3,8 +3,30 @@ from django.contrib.auth.models import User
 from Vehicle.models import Brand
 from datetime import datetime
 # from autoparts.models import Category
-
+# from phonenumber_field.modelfields import PhoneNumberField
 from django.apps import apps
+# from django.contrib.auth.models import AbstractUser
+# from django.core.validators import RegexValidator
+
+# class CustomUser(AbstractUser):
+#     phone_regex = RegexValidator(
+#         regex=r'^05\d{8}$',
+#         message="رقم الجوال يجب ان يكون بهذه الصيغة (05XXXXXXXX)"
+#     )
+#     username = models.CharField(
+#         max_length=10, 
+#         unique=True, 
+#         validators=[phone_regex],
+#         verbose_name="Saudi Phone Number"
+#     )
+
+#     email = models.EmailField(blank=True, null=True)
+
+#     USERNAME_FIELD = 'username'
+#     REQUIRED_FIELDS = []  
+
+#     def __str__(self):
+#         return self.username
 
 
 
@@ -27,7 +49,7 @@ from django.apps import apps
 class ProfileSeller(models.Model):
     def get_categories(self):
         return self.specializaties.all()
-    
+
     specializaties = models.ManyToManyField('autoparts.Category')
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     registration_date = models.DateField(auto_now_add=True)

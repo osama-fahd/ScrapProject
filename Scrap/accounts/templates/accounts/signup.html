@@ -12,11 +12,11 @@
                 <h1>تسجيل مستخدم جديد  </h1>
                 {% csrf_token %}
                 <!-- start of text input -->
-                <input type="email" name="email" class="form-control" placeholder="الإيميل " required />
+                <input type="email" name="email" class="form-control" placeholder="(اختياري) الإيميل" />
 
                 <div>
                     <h5>رقم الجوال:</h5>
-                    <input type="text" class="form-control" id="floatingInput" placeholder="رقم الجوال" name="username">
+                    <input type="text" class="form-control" id="floatingInput" placeholder="e.g. 0512345678" name="username" required>
                 </div>
 
                 <input type="text" class="form-control" id="floatingInput" placeholder="الإسم الأول" name="first_name" required>
@@ -25,7 +25,7 @@
 
                 <input type="text" class="form-control" id="floatingInput" placeholder="الحي " name="neighborhood" required>
 
-                <input type="password" class="form-control" id="floatingPassword" placeholder="الرمز السري" name="password">
+                <input type="password" class="form-control" id="floatingPassword" placeholder="الرمز السري" name="password" required>
 
                 <!-- end of text input -->
          
