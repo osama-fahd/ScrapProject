@@ -1,0 +1,22 @@
+
+/* General styling for table */
+.table-responsive table {
+    direction: rtl; /* Ensure the table content flows right-to-left */
+}
+
+/* For small screens */
+@media (max-width: 768px) {
+    .table-responsive {
+        overflow-x: auto; /* Ensure responsiveness */
+    }
+
+    .table-bordered th,
+    .table-bordered td {
+        text-align: right; /* Align text to the right */
+    }
+
+    .table thead th {
+        direction: rtl;
+        text-align: right;
+    }
+}

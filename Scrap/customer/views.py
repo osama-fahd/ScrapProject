@@ -75,6 +75,10 @@ def view_cart(request: HttpRequest):
 
 
 def add_cart(request: HttpRequest, product_id: int):
+   if not request.user.is_authenticated:
+      messages.warning(request, "يمكن فقط للمستخدمين المسجلين رؤية عربة التسوق", "alert-warning")
+      return redirect("accounts:sign_in")
+   
    try:
       product = Product.objects.get(pk=product_id)
 
@@ -85,13 +89,21 @@ def add_cart(request: HttpRequest, product_id: int):
       cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
 
       if not created:
+         if cart_item.quantity + 1 > product.stock:
+               messages.error(request, f"عذرًا، الكمية المطلوبة تتجاوز المخزون المتوفر ({product.stock}).", "alert-danger")
+               return redirect('customer:view_cart')
          cart_item.quantity += 1
-         messages.success(request, f"تمت أضافة المنتج الي عربة التسوق الخاصة بك." , "alert-success")
-         cart_item.save()
+      else:
+         if 1 > product.stock:
+            messages.error(request, f"عذرًا، المنتج غير متوفر بالمخزون.", "alert-danger")
+            return redirect('main:home_view')
+        
+      cart_item.save()
+      messages.success(request, "تمت إضافة المنتج إلى عربة التسوق الخاصة بك.", "alert-success")
 
       return redirect('customer:view_cart')
    except Exception as e:
-      messages.error(request, f"حدث خطأ: {e}", "alert-danger")
+      messages.error(request, f" حدث خطأ: {e}", "alert-danger")
       return redirect("main:home_view")
 
 
@@ -100,5 +112,47 @@ def remove_from_cart(request: HttpRequest, cart_item_id: int):
    messages.success(request, f"تمت إزالة المنتج من سلة التسوق الخاصة بك." , "alert-success")
    cart_item.delete()
    return redirect('customer:view_cart')
+
+
+def increase_quantity(request: HttpRequest, cart_item_id: int):
+    try:
+        cart_item = CartItem.objects.get(id=cart_item_id)
+        product = cart_item.product
+
+        if cart_item.quantity + 1 > product.stock:
+            messages.error(request, f"عذرًا، الكمية المطلوبة تتجاوز المخزون المتوفر ({product.stock}).", "alert-danger")
+        else:
+            cart_item.quantity += 1
+            cart_item.save()
+            messages.success(request, "تمت زيادة الكمية بنجاح.", "alert-success")
+
+        return redirect('customer:view_cart')
+    except CartItem.DoesNotExist:
+        messages.error(request, "عنصر السلة غير موجود.", "alert-danger")
+        return redirect('main:home_view')
+    except Exception as e:
+        messages.error(request, f"حدث خطأ: {e}", "alert-danger")
+        return redirect('main:home_view')
+
+
+def decrease_quantity(request: HttpRequest, cart_item_id: int):
+    try:
+        cart_item = CartItem.objects.get(id=cart_item_id)
+
+        if cart_item.quantity - 1 < 1:
+            messages.error(request, "لا يمكن أن تكون الكمية أقل من 1.", "alert-danger")
+        else:
+            cart_item.quantity -= 1
+            cart_item.save()
+            messages.success(request, "تمت إنقاص الكمية بنجاح.", "alert-success")
+
+        return redirect('customer:view_cart')
+    except CartItem.DoesNotExist:
+        messages.error(request, "عنصر السلة غير موجود.", "alert-danger")
+        return redirect('main:home_view')
+    except Exception as e:
+        messages.error(request, f"حدث خطأ: {e}", "alert-danger")
+        return redirect('main:home_view')
+
 
 

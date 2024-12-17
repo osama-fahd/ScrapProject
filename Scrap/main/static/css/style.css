@@ -1,7 +1,18 @@
 /*** general ***/   /* ادناه البنود العامة غير المرتبطة بهيدر او مين او فوتر */
+body {
+    background-color: #ffecdb;
+}
+
 .wrapper {
     min-height: 100vh;
 }
+
+nav {
+    /* background-color: #ffb700cb; */
+    background-color: #fbb608c1;
+}
+
+nav a {}
 
 a {
     text-decoration: none !important;
@@ -36,6 +47,19 @@ section {
     object-fit: contain;
 }
 
+/* products card */
+.product-card-image {
+    height: 300px; 
+    overflow: hidden;
+}
+
+.product-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    object-position: center; 
+}
+
 /* forms */
 form h5 {
     margin-top: 1rem;
@@ -58,6 +82,10 @@ form select {
 /*** footer ***/   /* ادناه البنود التي بداخل الفوتر */
 
 footer {
+    /* background-color: #ffce47cb; */
+    background-color: #fbb608c1;
+    /* background-color: #ffb700cb; */
+
     margin-top: 2rem;
     margin-bottom: 0;
 }
