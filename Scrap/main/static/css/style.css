@@ -1,7 +1,17 @@
 /*** general ***/   /* ادناه البنود العامة غير المرتبطة بهيدر او مين او فوتر */
+body {
+    background-color: #fee8d3;
+}
+
 .wrapper {
     min-height: 100vh;
 }
+
+nav {
+    background-color: #ffb700cb;
+}
+
+nav a {}
 
 a {
     text-decoration: none !important;
@@ -58,6 +68,10 @@ form select {
 /*** footer ***/   /* ادناه البنود التي بداخل الفوتر */
 
 footer {
+    /* background-color: #ffce47cb; */
+    /* background-color: #fbb608c1; */
+    background-color: #ffb700cb;
+
     margin-top: 2rem;
     margin-bottom: 0;
 }
