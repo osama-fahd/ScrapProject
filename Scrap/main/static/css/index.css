@@ -8,7 +8,7 @@
 }
 
 .hero .row {
-    width: 100vw;  /* Full viewport width */
+    width: 100%;  /* Full viewport width */
     margin: 0;     /* Remove default row margins */
 }
 
