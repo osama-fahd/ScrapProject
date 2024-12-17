@@ -1,350 +1,82 @@
-:root {
-    --a1: #a74f4f;
-    --a1r: 120 135 128;
-    --grda1: linear-gradient(180deg, rgb(var(--a1r) / .2), rgb(var(--a1r) / .4));
-    --a2: #bb4c4c;
-    --a2r: 146 67 67;
-    --grda2: linear-gradient(180deg, rgb(var(--a2r) / .2), rgb(var(--a2r) / .4));
-    --a3: #251313;
-    --a3r: 37 19 19;
-    --a4: #5c3030;
-    --a4r: 92 48 48;
-    --a5: #462525;
-    --a5r: 70 37 37;
-    --a6: #e99999;
-    --a6r: 233 153 153;
-    --grda3: linear-gradient(180deg, rgb(var(--a3r) / .2), rgb(var(--a3r) / .4));
-    --font-body: 'Gideon Roman', cursive;
-    --font-title: 'Castoro Titling', cursive;
-    --font-accent: 'Playfair Display', serif;
-    --font-accent-2: 'Tangerine', cursive;
-    --t0: #f5f5f5;
-    --t1: #A4A4A4;
-    --t2: #777;
-    --t3: rgb(119 119 119 / 0.5);
-    --l0: rgb(10 10 10 / 0.4);
-    --l1: rgb(10 10 10 / 0.6);
-    --l2: rgb(10 10 10 / 0.8);
-    --d0: rgb(0 0 0 / 0.4);
-    --d1: rgb(0 0 0 / 0.6);
-    --d2: rgb(0 0 0 / 0.8);
-    --blur: blur(5px);
-    --transition: all ease 0.4s;
-    --rnd: 10px;
-    --pd: 10px 16px;
-    --mrg: 10px;
-    --iron1: #C292C9;
-    --iron2: #9C5CA3;
-}
-
-/* Import fonts and icons */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&family=Source+Code+Pro:ital,wght@0,200;0,400;0,700;1,200;1,400;1,700&family=Teko:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Tangerine:wght@400;700&display=swap');
-@import url('https://files.jcink.net/uploads2/mcodes/css/cuppaccicons.css');
-
-/* Font Faces */
-@font-face {
-    font-family: bromello;
-    src: url("https://files.jcink.net/uploads/eotgs/skins/fonts/bromello_Regular.ttf");
-}
-
-@font-face {
-    font-family: bromello;
-    src: url("https://files.jcink.net/uploads/eotgs/skins/fonts/bromello_Regular.otf");
-}
-
-@font-face {
-    font-family: moon;
-    src: url("https://files.jcink.net/uploads/eotgs/skins/fonts/MOONRUNE_TTF.ttf");
-}
-
-@font-face {
-    font-family: volantis;
-    src: url("https://files.jcink.net/uploads/eotgs/skins/fonts/Volantis_Regular.ttf");
-}
-
-@font-face {
-    font-family: baybay;
-    src: url("https://files.jcink.net/uploads/eotgs/skins/fonts/BaybayinDoctrinaClear.ttf");
-}
-
-/* Body Styles */
 body {
-    background: var(--d0);
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    position: relative;
-    padding: 40px;
-    font-family: var(--font-body);
-    color: var(--t1);
+    background: #f8f9fa;
 }
-
-/* Profile Wrapper */
-.profile-wrapper {
-    background: var(--l1);
-    border-radius: var(--rnd);
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    overflow: hidden;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-/* Profile Image */
-.profile-image {
-    position: relative;
-    width: 150px;
-    height: 150px;
-    margin-bottom: 20px;
-}
-
-.profile-image img {
-    width: 100%;
-    height: 100%;
+.product-card img {
     object-fit: cover;
-    border-radius: 50%;
-    border: 4px solid var(--a2);
+    height: 200px;
+}
+.review-form textarea {
+    resize: none;
+}
+.star-rating {
+    color: #f5c518;
 }
 
-.profile-status {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    background-color: #28a745;
+
+
+
+
+.profile-banner {
+    background: linear-gradient(135deg,rgb(241, 222, 185),rgb(126, 104, 52));
     color: white;
-    padding: 5px 10px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-/* Username Initials */
-.profile-username {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.profile-username span {
-    display: inline-block;
-    width: 40px;
-    height: 40px;
-    background-color: var(--a2);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    font-weight: bold;
-}
-
-/* Profile Intro */
-.profile-intro {
+    padding: 3rem 1.5rem;
+    border-radius: 10px;
     text-align: center;
-    margin-bottom: 20px;
 }
 
-.profile-intro-designation {
-    font-size: 18px;
+.profile-banner h1 {
+    font-weight: 700;
+}
+
+.profile-banner p {
+    margin-bottom: 0.5rem;
+}
+
+.star-rating span {
+    color: gold;
+    font-size: 1.2rem;
+}
+
+.sidebar {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.filter-section h5 {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
     font-weight: 600;
-    color: var(--a1);
-    margin-bottom: 10px;
-}
-
-.profile-intro-description {
-    font-size: 14px;
-    color: var(--t2);
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-/* Profile Stats */
-.profile-stats {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    margin-bottom: 20px;
-}
-
-.profile-stat {
-    text-align: center;
-}
-
-.profile-stat-title {
-    font-size: 14px;
-    color: var(--t2);
-    text-transform: uppercase;
-    margin-bottom: 5px;
-}
-
-.profile-stat-value {
-    font-size: 20px;
-    font-weight: bold;
-    color: var(--a1);
-}
-
-/* Profile Accounts */
-.profile-accounts {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 20px;
-}
-
-.profile-account-link {
-    color: var(--t1);
-    font-size: 24px;
-    transition: color var(--transition);
-}
-
-.profile-account-link:hover {
-    color: var(--a2);
-}
-
-/* Products Section */
-.products-section {
-    width: 100%;
-    margin-top: 40px;
-}
-
-.products-section h3 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: var(--a1);
-}
-
-.products-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
 }
 
 .product-card {
-    background: var(--l1);
-    border-radius: var(--rnd);
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+    border: none;
+    border-radius: 10px;
     overflow: hidden;
-    transition: transform var(--transition);
 }
 
 .product-card:hover {
     transform: translateY(-5px);
 }
 
+.product-card .card-body {
+    padding: 1rem;
+}
+
 .product-card img {
-    width: 100%;
-    height: 200px;
     object-fit: cover;
+    height: 200px;
 }
 
-.product-card-body {
-    padding: 15px;
+/* Adjust input widths for filters */
+.price-range input[type="number"] {
+    width: 45%;
 }
 
-.product-card-title {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: var(--a1);
-}
-
-.product-card-description {
-    font-size: 14px;
-    color: var(--t2);
-    margin-bottom: 10px;
-    height: 40px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.product-card-price {
-    font-size: 16px;
-    font-weight: bold;
-    color: var(--a2);
-    margin-bottom: 10px;
-}
-
-.product-card-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.product-card-actions a {
-    text-decoration: none;
-    color: white;
-    background-color: var(--a2);
-    padding: 5px 10px;
-    border-radius: 5px;
-    transition: background-color var(--transition);
-}
-
-.product-card-actions a:hover {
-    background-color: var(--a1);
-}
-
-/* Reviews Section */
-.reviews-section {
-    width: 100%;
-    margin-top: 40px;
-}
-
-.reviews-section h3 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: var(--a1);
-}
-
-.review-card {
-    background: var(--l1);
-    border-radius: var(--rnd);
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    padding: 15px;
-    margin-bottom: 20px;
-}
-
-.review-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.reviewer-name {
-    font-size: 16px;
-    font-weight: bold;
-    color: var(--a1);
-}
-
-.review-rating {
-    color: var(--a2);
-}
-
-.review-comment {
-    font-size: 14px;
-    color: var(--t2);
-    margin-bottom: 10px;
-}
-
-.review-date {
-    font-size: 12px;
-    color: var(--t3);
-}
-
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-    body {
-        padding: 20px;
-    }
-    .profile-intro-description {
-        max-width: 100%;
-    }
-    .profile-stats {
-        flex-direction: column;
-        gap: 15px;
-    }
-    .products-grid {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    }
+/* Reviews */
+.list-group-item .star-rating {
+    margin-top: 0.5rem;
 }
