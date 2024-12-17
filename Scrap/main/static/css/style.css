@@ -1,11 +1,14 @@
 /*** general ***/   /* ادناه البنود العامة غير المرتبطة بهيدر او مين او فوتر */
 body {
-    background-color: #ffecdb;
+    background-color: #fee8d36e;
+
 }
 
 .wrapper {
     min-height: 100vh;
 }
+
+/* buttons & links & tables-head */
 
 nav {
     /* background-color: #ffb700cb; */
@@ -27,6 +30,20 @@ a:hover {
     text-decoration: underline !important;
     color: #007BFF !important;
 }
+
+
+/* Change the main colors */
+.btn-custom, .tables-custom, .thead-custom, .div-custom {
+    background-color: #ff9800;
+    border-color: #ff9800;
+    color: #fff;  /* for text color */
+}
+.btn-custom:hover {
+    background-color: #f57c00; /* slightly darker shade for hover */
+    border-color: #f57c00;
+}
+
+
 
 /*** header ***/  /* ادناه البنود الموجوده داخل الهيدر */
 
@@ -59,6 +76,12 @@ section {
     object-fit: cover; 
     object-position: center; 
 }
+
+/* part card */
+.part-card {
+    background-color: #fff;
+}
+
 
 /* forms */
 form h5 {
@@ -97,3 +120,4 @@ footer {
         height: 230px !important;
     }
 }
+
