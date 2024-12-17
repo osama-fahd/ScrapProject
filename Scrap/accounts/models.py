@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from Vehicle.models import Brand
 from datetime import datetime
+from phonenumber_field.modelfields import PhoneNumberField 
 # from autoparts.models import Category
 
 from django.apps import apps
@@ -36,6 +37,7 @@ class ProfileSeller(models.Model):
     address = models.CharField(max_length=300)
     commercial_register = models.IntegerField(max_length=10)
     brands = models.ManyToManyField(Brand)
+    phone_number = PhoneNumberField(unique=True, blank=True, null=True) 
     
     
     def __str__(self) -> str:
@@ -47,6 +49,8 @@ class ProfileCustomer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     registration_date = models.DateField(auto_now_add=True)
     neighborhood = models.CharField(max_length=100)
+    phone_number = PhoneNumberField(unique=True, blank=True, null=True) 
+
     
     def __str__(self) -> str:
         return f'{self.user.first_name} - {self.user.username}'

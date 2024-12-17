@@ -2,37 +2,85 @@
 
 {% block title %} تسجيل حساب جديد {% endblock %}
 
-{% block style %}{% endblock %}
+{% block style %}
+<!-- Include any additional CSS here -->
+{% endblock %}
 
 {% block content %}
- <section class="container">
-     <div class="row">
-         <div class="col-lg-8 col-md-12 form-center">
-             <form action="{% url 'accounts:sign_up' %}" method="post" enctype="multipart/form-data" class="d-flex flex-column gap-3">
-                <h1>تسجيل مستخدم جديد  </h1>
+<section class="container">
+    <div class="row">
+        <div class="col-lg-8 col-md-12 form-center">
+            <form action="{% url 'accounts:sign_up' %}" method="post" class="d-flex flex-column gap-3">
+                <h1>تسجيل مستخدم جديد</h1>
                 {% csrf_token %}
-                <!-- start of text input -->
-                <input type="email" name="email" class="form-control" placeholder="الإيميل " required />
-
-                <div>
+                
+                 <input 
+                    type="text" 
+                    name="username" 
+                    class="form-control" 
+                    placeholder="الإسم الكامل" 
+                    required 
+                    pattern=".{3,}" 
+                 >
+                
+                 <div>
                     <h5>رقم الجوال:</h5>
-                    <input type="text" class="form-control" id="floatingInput" placeholder="رقم الجوال" name="username">
+                    <input 
+                        type="tel" 
+                        class="form-control" 
+                        placeholder="مثال:" 
+                        name="phone_number" 
+                        required 
+                        pattern="0\d{9}" 
+                     >
                 </div>
+                
+   
+                <input 
+                    type="email" 
+                    name="email" 
+                    class="form-control" 
+                    placeholder="الإيميل" 
+                    required 
+                >
 
-                <input type="text" class="form-control" id="floatingInput" placeholder="الإسم الأول" name="first_name" required>
+                 <input 
+                    type="text" 
+                    class="form-control" 
+                    placeholder="الإسم الأول" 
+                    name="first_name" 
+                    required
+                >
 
-                <input type="text" class="form-control" id="floatingInput" placeholder="الإسم الأخير" name="last_name" required>
+                 <input 
+                    type="text" 
+                    class="form-control" 
+                    placeholder="الإسم الأخير" 
+                    name="last_name" 
+                    required
+                >
 
-                <input type="text" class="form-control" id="floatingInput" placeholder="الحي " name="neighborhood" required>
+                 <input 
+                    type="text" 
+                    class="form-control" 
+                    placeholder="الحي" 
+                    name="neighborhood" 
+                    required
+                >
 
-                <input type="password" class="form-control" id="floatingPassword" placeholder="الرمز السري" name="password">
-
-                <!-- end of text input -->
-         
+                 <input 
+                    type="password" 
+                    class="form-control" 
+                    placeholder="الرمز السري" 
+                    name="password" 
+                    required 
+                    minlength="8" 
+                    title="يجب أن يكون الرمز السري على الأقل 8 أحرف"
+                >
 
                 <input type="submit" class="btn btn-dark" value="تسجيل">
             </form>
         </div>
     </div>
- </section>
+</section>
 {% endblock %}

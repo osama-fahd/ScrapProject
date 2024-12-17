@@ -1,66 +1,162 @@
 {% extends 'main/base.html' %}
 
-{% block title %} تسجيل حساب جديد {% endblock %}
-
-{% block style %}{% endblock %}
+{% block title %} تسجيل حساب بائع جديد {% endblock %}
 
 {% block content %}
- <section class="container">
-     <div class="row">
-         <div class="col-lg-8 col-md-12 form-center">
-             <form action="{% url 'accounts:seller_sign_up' %}" method="post" enctype="multipart/form-data" class="d-flex flex-column gap-3">
-                <h1>تسجيل بائع جديد  </h1>
+<section class="container">
+    <div class="row">
+        <div class="col-lg-8 col-md-12 form-center">
+            <form action="{% url 'accounts:seller_sign_up' %}" method="post" class="d-flex flex-column gap-3">
+                <h1>تسجيل بائع جديد</h1>
                 {% csrf_token %}
-
-                <div>
-                    <h5>رقم الجوال:</h5>
-                    <input type="text" class="form-control" placeholder="رقم الجوال" name="username" required>
+                
+                 <div>
+                    <h5>اسم المستخدم:</h5>
+                    <input 
+                        type="text" 
+                        name="username" 
+                        class="form-control" 
+                        placeholder="اسم المستخدم (مثل: user123)" 
+                        required 
+                        pattern=".{3,}" 
+                        title="يجب أن يكون اسم المستخدم على الأقل 3 أحرف"
+                    >
                 </div>
 
-                <input type="text" class="form-control" placeholder="الإسم الكامل" name="first_name" required>
+                 <div>
+                    <h5>رقم الجوال:</h5>
+                    <input 
+                        type="tel" 
+                        class="form-control" 
+                        placeholder="مثال: 0581081084" 
+                        name="phone_number" 
+                        required 
+                        pattern="0\d{9}" 
+                        title="يرجى إدخال رقم هاتف سعودي يبدأ بالصفر ويتكون من 10 أرقام (مثال: 0542128316)"
+                    >
+                </div>
 
-                <input type="text" class="form-control" placeholder="اسم كراج التشليح" name="company_name" required>
+                 <div>
+                    <h5>الإيميل:</h5>
+                    <input 
+                        type="email" 
+                        name="email" 
+                        class="form-control" 
+                        placeholder="الإيميل" 
+                        required 
+                    >
+                </div>
 
-                <div class="d-flex flex-column gap-1">
+                <div>
+                    <h5>الإسم الأول:</h5>
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        placeholder="الإسم الأول" 
+                        name="first_name" 
+                        required
+                    >
+                </div>
+
+                 <div>
+                    <h5>اسم كراج التشليح:</h5>
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        placeholder="اسم كراج التشليح" 
+                        name="company_name" 
+                        required
+                    >
+                </div>
+
+                 <div class="d-flex flex-column gap-1">
                     <h5>ماهي شركات السيارات المتخصص بها؟</h5>
                     <div class="row row-cols-2 row-cols-md-3 row-cols-lg-3">
                         {% for brand in brands %}
                         <div>
-                            <input type="checkbox" class="form-check-input" name="brands" id="check-b-{{brand.id}}" value="{{brand.id}}"/>
+                            <input 
+                                type="checkbox" 
+                                class="form-check-input" 
+                                name="brands" 
+                                id="check-b-{{brand.id}}" 
+                                value="{{brand.id}}"
+                            />
                             <label for="check-b-{{brand.id}}">{{brand.name}}</label>
                         </div>
                         {% endfor %}
                     </div>
-                    
                 </div>
 
-                <div class="d-flex flex-column gap-1">
+                 <div class="d-flex flex-column gap-1">
                     <h5>ماهي انواع قطع الغيار المتخصص بها؟</h5>
                     <div class="row row-cols-3 row-cols-sm-3 row-cols-lg-4">
                         {% for speciality in specializaties %}
                             <div>
-                                <input type="checkbox" class="form-check-input" name="specializaties" id="check-{{speciality.id}}" value="{{speciality.id}}"/>
+                                <input 
+                                    type="checkbox" 
+                                    class="form-check-input" 
+                                    name="specializaties" 
+                                    id="check-{{speciality.id}}" 
+                                    value="{{speciality.id}}"
+                                />
                                 <label for="check-{{speciality.id}}">{{speciality.name}}</label>
                             </div>
                         {% endfor %}
                     </div>
-                    
                 </div>
 
+                 <div>
+                    <h5>السجل التجاري:</h5>
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        placeholder="السجل التجاري" 
+                        name="commercial_register" 
+                        required 
+                        pattern="\d{1,10}" 
+                        title="يرجى إدخال رقم تجاري يتكون من 1 إلى 10 أرقام"
+                    >
+                </div>
 
+                 <div>
+                    <h5>رابط قوقل ماب (اختياري):</h5>
+                    <input 
+                        type="url" 
+                        class="form-control" 
+                        placeholder="الموقع في قوقل ماب (مثال: https://maps.google.com/...)" 
+                        name="google_map_address" 
+                        pattern="https?://.+" 
+                        title="يرجى إدخال رابط صحيح لموقع Google Maps"
+                    >
+                </div>
 
-                <input type="number" class="form-control"  placeholder="السجل التجاري" name="commercial_register" required >
+                 <div>
+                    <h5>العنوان:</h5>
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        placeholder="العنوان" 
+                        name="address" 
+                        required
+                    >
+                </div>
 
-                <input type="url" class="form-control" placeholder="الموقع في قوقل ماب" name="google_map_address" >
-
-                <input type="text" class="form-control" placeholder="العنوان" name="address" required>
-
-                <input type="password" class="form-control" placeholder="الرمز السري" name="password" required>
-         
+                 <div>
+                    <h5>الرمز السري:</h5>
+                    <input 
+                        type="password" 
+                        class="form-control" 
+                        placeholder="الرمز السري" 
+                        name="password" 
+                        required 
+                        minlength="8" 
+                        title="يجب أن يكون الرمز السري على الأقل 8 أحرف"
+                    >
+                </div>
 
                 <input type="submit" class="btn btn-dark" value="تسجيل">
             </form>
         </div>
     </div>
- </section>
+</section>
 {% endblock %}
