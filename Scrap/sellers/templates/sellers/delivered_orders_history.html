@@ -1,0 +1,37 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}تاريخ الطلبات المسلّمة{% endblock %}
+
+{% block content %}
+<section class="container my-4">
+    <h1 class="text-center mb-4">تاريخ الطلبات المسلّمة</h1>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>المنتج</th>
+                    <th>العميل</th>
+                    <th>تاريخ الطلب</th>
+                    <th>الحالة</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order_item in delivered_orders %}
+                <tr>
+                    <td>{{ order_item.product.part }}</td>
+                    <td>{{ order_item.customer.user.username }}</td>
+                    <td>{{ order_item.date_created }}</td>
+                    <td>{{ order_item.get_status_display }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center">لا توجد طلبات مسلّمة</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

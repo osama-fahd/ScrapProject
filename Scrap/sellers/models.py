@@ -14,12 +14,13 @@ class OrderItem(models.Model):
         PENDING = 'PENDING', 'انتظار مراجعة البائع'
         ACCEPTED = 'ACCEPTED', 'قيد التوصيل'
         # IN_PROGRESS = 'IN_PROGRESS', 'قيد العمل'
+        DELIVERED = 'DELIVERED', 'تم التوصيل'
         DENIED = 'DENIED', 'رفض'
     
     status = models.CharField(
         max_length=20,choices=Status.choices,default=Status.PENDING)
-    product = models.ForeignKey(
-        Product, on_delete=models.CASCADE)
+    # product = models.ForeignKey(
+        # Product, on_delete=models.CASCADE)
     customer = models.ForeignKey(
         ProfileCustomer, null=True, on_delete=models.PROTECT)
     seller = models.ForeignKey(

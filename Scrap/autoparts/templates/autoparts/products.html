@@ -59,8 +59,17 @@
         <div class="col-12">
             <div class="card">
                 <div class="row g-0">
+<!--                    -->
                     <div class="col-md-4 product-card-image">
                         <img src="{{ product.get_display_image_url }}" class="" alt="{{ product.name }}">
+
+<!--                     <div class="col-md-4">
+                        {% if product.image and product.image.name %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                      {% else %}
+                        <img src="{% static 'images/placeholder.png' %}" alt="No image available">
+                      {% endif %} -->
+<!--  -->
                     </div>
                     <div class="col-md-8">
                         <div class="card-body h-100 d-flex flex-column justify-content-between">
@@ -83,9 +92,11 @@
                                 <span class="badge bg-secondary me-1">{{ car.brand.name }} {{ car.name }}</span>
                                 {% endfor %}
                             </div>
+                          
                             <div class="mt-4">
                                 <a href="{% url 'customer:add_cart' product.id %}" class="btn btn-dark w-100">اضافة للسلة</a>
                             </div>
+                          
                         </div>
                     </div>
                 </div>
