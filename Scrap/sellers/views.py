@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect,get_object_or_404
 from accounts.models import ProfileSeller,ProfileCustomer,Review
 from autoparts.models import Product, Part ,Category
 from Vehicle.models import Brand , Car
-from sellers.forms import ProductForm
+from sellers.forms import ProductForm,ReviewForm
 from django.contrib import messages
 from django.http import HttpRequest
 from django.core.paginator import Paginator
@@ -17,7 +17,7 @@ from django.views.decorators.csrf import csrf_exempt
 from twilio.request_validator import RequestValidator
 import json
 from twilio.twiml.messaging_response import MessagingResponse
-
+from django.urls import reverse, NoReverseMatch
 
 
 
@@ -226,28 +226,73 @@ def update_product(request, product_id):
             "selected_cars": selected_cars,
         }
     )
+ 
+def seller_profile_view(request, seller_id):
+    try:
+        seller = get_object_or_404(ProfileSeller, id=seller_id)
+        products = Product.objects.filter(seller=seller)
+        reviews = Review.objects.filter(seller=seller)
+        average_rating = reviews.aggregate(Avg('rating'))['rating__avg'] or 0
 
-def seller_profile_view(request: HttpRequest, seller_id: int):
-    seller = get_object_or_404(ProfileSeller, id=seller_id)
-    
-    products = Product.objects.filter(seller=seller)
-    
-    reviews = Review.objects.filter(seller=seller)
-    
-    average_rating = reviews.aggregate(Avg('rating'))['rating__avg'] or 0
-    
-    paginator = Paginator(products, 10)  # Show 10 products per page
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    
-    context = {
-        'seller': seller,
-        'products': page_obj,
-        'reviews': reviews,
-        'average_rating': average_rating,
-    }
-    
-    return render(request, 'sellers/sellers_profiles.html', context)
+        # Search products
+        search_query = request.GET.get('search', '')
+        if search_query:
+            products = products.filter(part__name__icontains=search_query)
+
+        # Sort products
+        sort_by = request.GET.get('sort', '')
+        if sort_by == 'price_asc':
+            products = products.order_by('price')
+        elif sort_by == 'price_desc':
+            products = products.order_by('-price')
+        elif sort_by == 'newest':
+            products = products.order_by('-created_at')
+
+      
+        min_price = request.GET.get('min_price')
+        max_price = request.GET.get('max_price')
+        if min_price:
+            products = products.filter(price__gte=min_price)
+        if max_price:
+            products = products.filter(price__lte=max_price)
+        try:
+            profile_url = reverse("seller:seller_profile_view", args=[seller_id])
+        except NoReverseMatch:
+            profile_url = None
+
+        if request.method == "POST":
+            if OrderItem.objects.filter(seller=seller, customer__user=request.user, status=OrderItem.Status.DELIVERED).exists():
+                comment = request.POST.get("comment")
+                rating = request.POST.get("rating")
+                Review.objects.create(
+                    seller=seller,
+                    customer=request.user.profilecustomer,
+                    rating=rating,
+                    comment=comment,
+                )
+                messages.success(request, "Review submitted successfully!")
+                return redirect(request.path)
+
+        paginator = Paginator(products, 8)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        context = {
+            "seller": seller,
+            "products": page_obj,
+            "reviews": reviews,
+            "average_rating": average_rating,
+            "profile_url": profile_url,
+            "search_query": search_query,
+            "sort_by": sort_by,
+            "min_price": min_price,
+            "max_price": max_price,
+        }
+        return render(request, "sellers/sellers_profiles.html", context)
+
+    except NoReverseMatch:
+        messages.error(request, "Error in URL routing. Page not available.")
+        return redirect("main:home_view")
 
 # def order_item_view(request,cart_id:Cart):
 #     cart= Cart.objects.get(pk=cart_id)
@@ -390,7 +435,7 @@ def checkout(request):
         )
 
         # Pass request to the notification function so we can build absolute URI
-        send_order_notification_to_seller(request, seller, order_item)
+        # send_order_notification_to_seller(request, seller, order_item)
 
     cart_items.delete()
     messages.success(request, "تم إرسال الطلبات إلى البائع للمراجعة", "alert-success")
@@ -429,7 +474,7 @@ def accept_order_item(request, order_item_id):
     order_item.save()
 
     # Notify the customer
-    send_order_status_notification_to_customer(order_item.customer, "تم قبول طلبك، الطلب قيد التوصيل")
+    # send_order_status_notification_to_customer(order_item.customer, "تم قبول طلبك، الطلب قيد التوصيل")
 
     messages.success(request, "You have accepted the order.")
     return redirect("seller:seller_order_list_view")

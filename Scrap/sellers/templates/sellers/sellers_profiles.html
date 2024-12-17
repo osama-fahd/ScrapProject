@@ -1,156 +1,196 @@
 {% extends 'main/base.html' %}
-
 {% load static %}
 
 {% block title %}{{ seller.company_name }} - Profile{% endblock %}
 
 {% block style %}
-<link rel="stylesheet" href="{% static 'sellers/css/seller_profile.css' %}">
+<link rel="stylesheet" href="{% static 'css/seller_profile.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="profile-wrapper">
-    <div class="profile-image">
-        {% if seller.logo %}
-            <img src="{{ seller.logo.url }}" alt="{{ seller.company_name }} Logo">
+<section class="container my-4">
+    <div class="profile-banner mb-5">
+        <h1 class="display-5">{{ seller.company_name }}</h1>
+        <p class="text-white-50">{{ seller.address }}</p>
+        <p><strong>متوسط التقييم:</strong> {{ average_rating|floatformat:1 }} / 5</p>
+        <div class="star-rating mb-3">
+            {% for i in "12345"|make_list %}
+                {% if forloop.counter <= average_rating|floatformat:0 %}
+                    <span>★</span>
+                {% else %}
+                    <span>☆</span>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        {% if user.is_authenticated and has_delivered_order %}
+            <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#reviewModal">أضف تقييم</button>
         {% else %}
-            <img src="{% static 'sellers/images/default_logo.png' %}" alt="Default Seller Logo">
+            <small class="text-white-50">ينتظر اضافتك لسلة!!</small>
         {% endif %}
-        <span class="profile-status">online</span>
-        <div class="temp-overlay one"></div>
-        <div class="temp-overlay two"></div>
     </div>
-    
-    <div class="profile-username">
-        {% with first_initial=seller.company_name|slice:":1" second_initial=seller.user.last_name|slice:":1" %}
-            <span id="profile-username-first">{{ first_initial|upper }}</span>
-            <span id="profile-username-second">{{ second_initial|upper }}</span>
-        {% endwith %}
-    </div>
-    
-    <div class="profile-intro">
-        <span class="profile-intro-designation">Seller</span>
-        <div class="profile-intro-description">
-            We offer a wide range of products from top brands like 
-            {% for brand in seller.brands.all %}
-                {{ brand.name }}{% if not forloop.last %}, {% endif %}
-            {% endfor %}.
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="sidebar">
+                <div class="product-count mb-3">
+                    <strong>{{ products|length }} منتجات</strong>
+                </div>
+
+                <form method="GET">
+                    <div class="filter-section">
+                        <h5>بحث</h5>
+                        <input type="text" name="search" class="form-control" placeholder="ابحث عن المنتجات" value="{{ request.GET.search }}">
+                    </div>
+
+                     <div class="filter-section">
+                        <h5>الترتيب</h5>
+                        <select name="sort" class="form-select" onchange="this.form.submit()">
+                            <option value="">اختيار</option>
+                            <option value="price_asc" {% if request.GET.sort == 'price_asc' %}selected{% endif %}>السعر: من الأقل للأعلى</option>
+                            <option value="price_desc" {% if request.GET.sort == 'price_desc' %}selected{% endif %}>السعر: من الأعلى للأقل</option>
+                            <option value="rating" {% if request.GET.sort == 'rating' %}selected{% endif %}>التقييم</option>
+                            <option value="newest" {% if request.GET.sort == 'newest' %}selected{% endif %}>الأحدث</option>
+                        </select>
+                    </div>
+
+
+
+                     <div class="filter-section">
+                        <h5>حدد ميزانيتك</h5>
+                        <div class="price-range">
+                            <input type="number" name="min_price" class="form-control" placeholder="أدنى" value="{{ request.GET.min_price }}">
+                            <span>-</span>
+                            <input type="number" name="max_price" class="form-control" placeholder="أعلى" value="{{ request.GET.max_price }}">
+                        </div>
+                    </div>
+
+                    <div class="filter-section text-center mt-4">
+                        <button type="submit" class="btn btn-primary w-100 ">بحث</button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
-    
-    <div class="profile-stats">
-        <div class="profile-stat">
-            <span class="profile-stat-title">Products</span>
-            <br>
-            <span class="profile-stat-value">{{ products.paginator.count }}</span>
-        </div>
-        <div class="profile-stat">
-            <span class="profile-stat-title">Reviews</span>
-            <br>
-            <span class="profile-stat-value">{{ reviews.count }}</span>
-        </div>
-        <div class="profile-stat">
-            <span class="profile-stat-title">Average Rating</span>
-            <br>
-            <span class="profile-stat-value">{{ average_rating|floatformat:1 }}</span>
-        </div>
-    </div>
-    
-    <div class="profile-accounts">
-        <a href="{{ seller.instagram_url }}" class="profile-account-link" target="_blank"><i class="fab fa-instagram fa-lg"></i></a>
-        <a href="{{ seller.twitter_url }}" class="profile-account-link" target="_blank"><i class="fab fa-twitter fa-lg"></i></a>
-        <a href="{{ seller.behance_url }}" class="profile-account-link" target="_blank"><i class="fab fa-behance fa-lg"></i></a>
-        <a href="{{ seller.dribbble_url }}" class="profile-account-link" target="_blank"><i class="fab fa-dribbble fa-lg"></i></a>
-    </div>
-    
-    <div class="products-section">
-        <h3>Products by {{ seller.company_name }}</h3>
-        <div class="products-grid">
-            {% for product in products %}
-                <div class="product-card">
-                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
-                    <div class="product-card-body">
-                        <div class="product-card-title">{{ product.name }}</div>
-                        <div class="product-card-description">{{ product.description|truncatewords:20 }}</div>
-                        <div class="product-card-price">${{ product.price }}</div>
-                        <div class="product-card-actions">
-                            <a href="{% url 'autoparts:product_detail' product.id %}" class="btn btn-primary">View Details</a>
-                            <a href="{% url 'seller:update_product' product.id %}" class="btn btn-warning">Edit</a>
-                            <form action="{% url 'seller:delete_product' product.id %}" method="POST" style="display:inline;">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this product?');">Delete</button>
-                            </form>
+
+        <!-- Right Main Section -->
+        <div class="col-md-9">
+            <!-- Products Section -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="h4">المنتجات</h2>
+            </div>
+
+            <div class="row g-4">
+                {% for product in products %}
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="card product-card h-100">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                        {% else %}
+                            <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="No Image Available">
+                        {% endif %}
+                        <div class="card-body text-center">
+                            <h5 class="card-title mb-1">{{ product.part.name }}</h5>
+                            <p class="text-muted mb-2">{{ product.price }} ريال</p>
+                            {% comment %} <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-primary btn-sm">تفاصيل المنتج</a> {% endcomment %}
                         </div>
                     </div>
                 </div>
-            {% empty %}
-                <p>No products available.</p>
-            {% endfor %}
-        </div>
-        
-        <nav aria-label="Page navigation">
-            <ul class="pagination justify-content-center">
-                {% if products.has_previous %}
+                {% empty %}
+                <div class="col-12 text-center">
+                    <p class="text-muted">لا توجد منتجات متاحة.</p>
+                </div>
+                {% endfor %}
+            </div>
+
+            {% if products.has_other_pages %}
+            <div aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if products.has_previous %}
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ products.previous_page_number }}" aria-label="Previous">
+                        <a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ products.previous_page_number }}" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
-                {% else %}
+                    {% else %}
                     <li class="page-item disabled">
-                        <span class="page-link" aria-hidden="true">&laquo;</span>
+                        <span class="page-link">&laquo;</span>
                     </li>
-                {% endif %}
-                
-                {% for num in products.paginator.page_range %}
-                    {% if products.number == num %}
-                        <li class="page-item active"><span class="page-link">{{ num }}</span></li>
-                    {% elif num > products.number|add:'-3' and num < products.number|add:'3' %}
-                        <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
                     {% endif %}
-                {% endfor %}
-                
-                {% if products.has_next %}
+
+                    {% for num in products.paginator.page_range %}
+                        {% if products.number == num %}
+                            <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                        {% elif num > products.number|add:'-3' and num < products.number|add:'3' %}
+                            <li class="page-item"><a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ num }}">{{ num }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if products.has_next %}
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ products.next_page_number }}" aria-label="Next">
+                        <a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ products.next_page_number }}" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
-                {% else %}
+                    {% else %}
                     <li class="page-item disabled">
-                        <span class="page-link" aria-hidden="true">&raquo;</span>
+                        <span class="page-link">&raquo;</span>
                     </li>
-                {% endif %}
-            </ul>
-        </nav>
+                    {% endif %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
     </div>
-    
-    <div class="reviews-section">
-        <h3>Customer Reviews</h3>
-        {% if reviews %}
-            {% for review in reviews %}
-                <div class="review-card">
-                    <div class="review-header">
-                        <div class="reviewer-name">{{ review.customer.user.first_name }} {{ review.customer.user.last_name }}</div>
-                        <div class="review-rating">
-                            {% for i in "12345" %}
-                                {% if forloop.counter <= review.rating %}
-                                    <span class="text-warning">&#9733;</span>
-                                {% else %}
-                                    <span class="text-muted">&#9734;</span>
-                                {% endif %}
-                            {% endfor %}
-                            ({{ review.rating }} / 5)
-                        </div>
-                    </div>
-                    <div class="review-comment">{{ review.comment }}</div>
-                    <div class="review-date">Reviewed on {{ review.created_at|date:"F j, Y" }}</div>
+
+     <h2 class="h4 mt-5 mb-3 text-center">التقييمات</h2>
+    {% if reviews %}
+    <div class="list-group mb-5">
+        {% for review in reviews %}
+        <div class="list-group-item">
+            <div class="d-flex justify-content-between mb-1">
+                <strong>{{ review.customer.user.username }}</strong>
+                <small class="text-muted">{{ review.created_at|date:"Y-m-d" }}</small>
+            </div>
+            <div class="star-rating mb-2">
+                {% for i in "12345"|make_list %}
+                    {% if forloop.counter <= review.rating %}
+                        <span>★</span>
+                    {% else %}
+                        <span>☆</span>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <p class="mb-0">{{ review.comment }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-muted text-center mb-5">لا توجد تقييمات بعد.</p>
+    {% endif %}
+</section>
+
+{% if user.is_authenticated and has_delivered_order %}
+<div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="post">
+            {% csrf_token %}
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reviewModalLabel">إضافة تقييم</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
                 </div>
-            {% endfor %}
-        {% else %}
-            <p>No reviews yet.</p>
-        {% endif %}
+                <div class="modal-body">
+                    {{ review_form.as_p }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="submit" class="btn btn-primary">إرسال</button>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
+{% endif %}
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-SCPCMt51fC91J5PlNfQ76YYwdNZf27gFgjJjGdtXWfawtFNNfpka4QZDckj+OqKe" crossorigin="anonymous"></script>
 {% endblock %}
