@@ -9,8 +9,9 @@
 {% block content %}
 
 <section class="container" style="padding: 40px 0;">
-    <div class="card mb-3" style="background-color: #fee8d36e; border: none; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); margin: auto;">
-        <div class="card-body" style="line-height: 3;">
+    <div class="card mb-3" style="background: linear-gradient(135deg,rgb(241, 222, 185),rgb(126, 104, 52));
+ border: none; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); margin: auto;">
+        <div class="card-body p-4" style="line-height: 3;">
             <h4 class="card-title text-center">{{ profile.user.first_name }} {{ profile.user.last_name }}</h4>
             <h5 class="card-subtitle mb-3 text-muted text-center">الإيميل: {{ profile.user.email }}</h5>
             <h6 class="card-subtitle mb-3 text-muted text-center">رقم جوال: {{ profile.user.username }}</h6>

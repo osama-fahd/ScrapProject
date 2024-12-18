@@ -95,7 +95,7 @@
                         <div class="d-flex gap-2">
                             <a href="{% url 'seller:update_product' product.id %}" class="btn btn-primary btn-sm">تعديل</a>
                             
-                            <form method="post" action="{% url 'seller:delete_product' product.id %}" onsubmit="return confirm('هل أنت متأكد أنك تريد حذف هذا المنتج؟');" class="m-0">
+                            <form method="post" action="#" onsubmit="return confirm('هل أنت متأكد أنك تريد حذف هذا المنتج؟');" class="m-0">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-danger btn-sm">حذف</button>
                             </form>

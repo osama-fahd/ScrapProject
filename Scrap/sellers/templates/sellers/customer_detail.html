@@ -9,12 +9,17 @@
     
     <div class="card mb-4">
         <div class="card-header">
-            المنتج: {{ product.name }}
+            المنتج: {{ product.part.name }}
         </div>
         <div class="card-body">
             <p><strong>السعر:</strong> {{ product.price }} ريال</p>
-            <p><strong>الوصف:</strong> {{ product.description }}</p>
-            <p><strong>الحالة:</strong> {% if product.part_direction %}{{ product.get_part_direction_display }}{% else %}—{% endif %}</p>
+            {% if product.description %}
+                <p><strong>الوصف:</strong> {{ product.description }}</p>
+            {% endif %}
+            {% if product.part_direction %}
+                <p><strong>اتجاه القطعة:</strong> {{ product.get_part_direction_display }}</p>
+            {% endif %}
+            <p><strong>حالة الطلب:</strong> {{ product.condition }}</p>
             <p><strong>تاريخ الطلب:</strong> {{ order_item.date_created }}</p>
             <p><strong>حالة الطلب:</strong> {{ order_item.get_status_display }}</p>
         </div>
@@ -41,13 +46,13 @@
     {% if order_item.status != order_item.Status.DELIVERED %}
     <div class="mt-4 text-center">
         <a href="{% url 'seller:mark_as_delivered_view' order_item.id %}" class="btn btn-info">
-            وضع كتم التوصيل
+            تم تسليم القطعة للعميل
         </a>
     </div>
     {% endif %}
 
     <div class="mt-4 text-center">
-        <a href="{% url 'seller:delivered_orders_history' %}" class="btn btn-secondary">
+        <a href="{% url 'seller:delivered_orders_history_view' %}" class="btn btn-secondary">
             عرض تاريخ الطلبات المسلّمة
         </a>
     </div>

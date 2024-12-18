@@ -116,8 +116,8 @@ def seller_add_product(request: HttpRequest):
                 car_obj = Car.objects.get(id=car_id)
                 product.car.add(car_obj)
 
-            messages.success(request, "تمت اضافة خردتك")
-            return redirect("autoparts:all_parts_view")
+            messages.success(request, "تمت اضافة القطعة")
+            return redirect("seller:seller_dashboard")
         except Part.DoesNotExist:
             messages.error(request, "اكمل جميع الحقول")
         except Exception as e:
