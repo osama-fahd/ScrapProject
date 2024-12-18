@@ -75,7 +75,9 @@
                     </div>
                     <div class="col-md-8">
                         <div class="card-body h-100 d-flex flex-column justify-content-between">
-                            <h5 class="card-title">{{ product.seller.company_name }}</h5>
+                            <a href="{% url 'seller:seller_profile_view' product.seller.id %}">
+                                <h5 class="card-title">{{ product.seller.company_name }}</h5>
+                            </a>
                             <p class="card-text">{{ product.description }}</p>
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <span class="badge bg-primary">{{ product.condition }}</span>

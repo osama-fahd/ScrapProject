@@ -27,11 +27,27 @@
 
 .hero-title {
     font-weight: 800;
-    color: #fff;
+    /* color: #fff !important; */
     margin-bottom: 1.5rem;
-    font-size: 3.5rem;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    font-size: 6rem;
+    text-shadow: 3px 3px 19px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
 }
+
+.hero-text-p{
+    font-size: 2rem !important;
+    /* text-shadow: 3px 3px 19px rgba(0, 0, 0, 0.5) !important; */
+    backdrop-filter: blur(2px);
+}
+
+
+.hero-text-p2{
+    font-size: 3rem !important;
+    text-shadow: 3px 3px 19px rgba(0, 0, 0, 0.978) !important;
+    backdrop-filter: blur(1px);
+    color: #ffcf10 !important;
+}
+
 
 .hero img {
     height: 100%;
@@ -104,6 +120,13 @@
     padding: 2rem; 
 }
 
+.container-background2 {
+    background-image: url("/static/images/autoparts2.png");
+    background-size: cover; 
+    background-position: center; 
+    padding: 2rem; 
+}
+
 
 /*** media quries ***/
 @media (max-width: 768px) {
@@ -117,6 +140,11 @@
     
     .hero-text {
         padding: 1.5rem;
+    }
+
+    .hero-title-header{
+        font-size: 2rem;
+
     }
 }
 

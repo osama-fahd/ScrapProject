@@ -116,8 +116,8 @@ def seller_add_product(request: HttpRequest):
                 car_obj = Car.objects.get(id=car_id)
                 product.car.add(car_obj)
 
-            messages.success(request, "تمت اضافة القطعة")
-            return redirect("seller:seller_dashboard")
+            messages.success(request, "تمت اضافة قطعتك")
+            return redirect("autoparts:all_parts_view")
         except Part.DoesNotExist:
             messages.error(request, "اكمل جميع الحقول")
         except Exception as e:
@@ -164,7 +164,7 @@ def update_product(request, product_id):
         price = request.POST.get('price')
         image = request.FILES.get('image')  
 
-        # Validate required fields
+       
         if not category_id or not part_id or not price or not description:
             messages.error(request, "Category, Part, price, and description are required fields.")
             return render(
@@ -230,16 +230,16 @@ def update_product(request, product_id):
 def seller_profile_view(request, seller_id):
     try:
         seller = get_object_or_404(ProfileSeller, id=seller_id)
+        
         products = Product.objects.filter(seller=seller)
+        
         reviews = Review.objects.filter(seller=seller)
         average_rating = reviews.aggregate(Avg('rating'))['rating__avg'] or 0
 
-        # Search products
-        search_query = request.GET.get('search', '')
+        search_query = request.GET.get('search', '').strip()
         if search_query:
             products = products.filter(part__name__icontains=search_query)
 
-        # Sort products
         sort_by = request.GET.get('sort', '')
         if sort_by == 'price_asc':
             products = products.order_by('price')
@@ -248,32 +248,57 @@ def seller_profile_view(request, seller_id):
         elif sort_by == 'newest':
             products = products.order_by('-created_at')
 
-      
         min_price = request.GET.get('min_price')
         max_price = request.GET.get('max_price')
         if min_price:
-            products = products.filter(price__gte=min_price)
+            try:
+                products = products.filter(price__gte=float(min_price))
+            except ValueError:
+                messages.error(request, "Invalid minimum price.")
         if max_price:
-            products = products.filter(price__lte=max_price)
+            try:
+                products = products.filter(price__lte=float(max_price))
+            except ValueError:
+                messages.error(request, "Invalid maximum price.")
+
+        selected_categories = request.GET.getlist('category')
+        if selected_categories:
+            products = products.filter(category__id__in=selected_categories)
+
+        categories = Category.objects.all()
+
         try:
             profile_url = reverse("seller:seller_profile_view", args=[seller_id])
         except NoReverseMatch:
             profile_url = None
 
-        if request.method == "POST":
-            if OrderItem.objects.filter(seller=seller, customer__user=request.user, status=OrderItem.Status.DELIVERED).exists():
-                comment = request.POST.get("comment")
-                rating = request.POST.get("rating")
-                Review.objects.create(
-                    seller=seller,
-                    customer=request.user.profilecustomer,
-                    rating=rating,
-                    comment=comment,
-                )
-                messages.success(request, "Review submitted successfully!")
-                return redirect(request.path)
+        has_delivered_order = False
+        profile_customer = None
+        if request.user.is_authenticated and hasattr(request.user, 'profilecustomer'):
+            profile_customer = request.user.profilecustomer
+            has_delivered_order = OrderItem.objects.filter(
+                seller=seller,
+                customer=profile_customer,
+                status=OrderItem.Status.DELIVERED
+            ).exists()
 
-        paginator = Paginator(products, 8)
+        if request.method == "POST":
+            if has_delivered_order:
+                review_form = ReviewForm(request.POST)
+                if review_form.is_valid():
+                    review = review_form.save(commit=False)
+                    review.seller = seller
+                    review.customer = profile_customer
+                    review.save()
+                    messages.success(request, "تم إضافة تقييمك بنجاح.", "alert-success")
+                    return redirect(request.path)
+            else:
+                messages.error(request, "يجب عليك شراء وتلقي منتج من هذا البائع لترك تقييم.", "alert-danger")
+
+        else:
+            review_form = ReviewForm()
+
+        paginator = Paginator(products, 8) 
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 
@@ -287,11 +312,15 @@ def seller_profile_view(request, seller_id):
             "sort_by": sort_by,
             "min_price": min_price,
             "max_price": max_price,
+            "categories": categories,
+            "selected_categories": selected_categories,
+            "has_delivered_order": has_delivered_order,
+            "review_form": review_form if has_delivered_order else None,
         }
         return render(request, "sellers/sellers_profiles.html", context)
 
     except NoReverseMatch:
-        messages.error(request, "Error in URL routing. Page not available.")
+        messages.error(request, "خطأ في توجيه URL. الصفحة غير متاحة.")
         return redirect("main:home_view")
 
 # def order_item_view(request,cart_id:Cart):
@@ -303,6 +332,9 @@ def seller_profile_view(request, seller_id):
 #             product=cartitem.product(
 
 #             )
+
+
+
 
 
 

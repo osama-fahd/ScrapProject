@@ -25,6 +25,7 @@
                   <a class="navbar-brand" href="{% url 'main:home_view' %}">
 
                     <h3 class="fustat_heading">
+                      <img src="{% static 'images/autoparts_logo.png' %}" alt="Logo" class="logo" style="height: 50px; margin-left: 10px;">
                       سكراب
                     </h3>
 
@@ -90,9 +91,9 @@
                           </li>
                         {% endif %}
 
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                           <a class="nav-link active" href="#">قطع الغيار</a>
-                        </li>
+                        </li> -->
                     
                         
                         {% if request.user.is_authenticated %}

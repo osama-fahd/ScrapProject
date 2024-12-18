@@ -40,7 +40,11 @@
                 {% for order_item in pending_orders %}
                     <tr>
                         <td>{{ order_item.product.part }}</td>
-                        <td>{{ order_item.seller.company_name }}</td>
+                        <td>
+                            <a href="{% url 'seller:seller_profile_view' order_item.product.seller.id %}">
+                                {{ order_item.seller.company_name }}
+                            </a>
+                        </td>
                         <td>{{ order_item.date_created }}</td>
                         <td>{{ order_item.get_status_display }}</td>
                     </tr>
@@ -53,7 +57,11 @@
                 {% for order_item in accepted_orders %}
                     <tr>
                         <td>{{ order_item.product.part }}</td>
-                        <td>{{ order_item.seller.company_name }}</td>
+                        <td>
+                            <a href="{% url 'seller:seller_profile_view' order_item.product.seller.id %}">
+                                {{ order_item.seller.company_name }}
+                            </a>
+                        </td>
                         <td>{{ order_item.date_created }}</td>
                         <td>{{ order_item.get_status_display }}</td>
                     </tr>
@@ -66,13 +74,34 @@
                 {% for order_item in denied_orders %}
                     <tr>
                         <td>{{ order_item.product.part }}</td>
-                        <td>{{ order_item.seller.company_name }}</td>
+                        <td>
+                            <a href="{% url 'seller:seller_profile_view' order_item.product.seller.id %}">
+                                {{ order_item.seller.company_name }}
+                            </a>
+                        </td>
                         <td>{{ order_item.date_created }}</td>
                         <td>{{ order_item.get_status_display }}</td>
                     </tr>
                 {% empty %}
                     <tr>
-                        <td colspan="4" class="text-center">لا توجد طلبات</td>
+                        <td colspan="4" class="text-center">لا توجد طلبات مرفوضة</td>
+                    </tr>
+                {% endfor %}
+
+                {% for order_item in delivered_orders %}
+                    <tr>
+                        <td>{{ order_item.product.part }}</td>
+                        <td>
+                            <a href="{% url 'seller:seller_profile_view' order_item.product.seller.id %}">
+                                {{ order_item.seller.company_name }}
+                            </a>
+                        </td>
+                        <td>{{ order_item.date_created }}</td>
+                        <td>{{ order_item.get_status_display }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center">لا توجد طلبات تم توصيلها </td>
                     </tr>
                 {% endfor %}
             </tbody>
