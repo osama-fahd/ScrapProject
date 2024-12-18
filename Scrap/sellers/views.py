@@ -27,7 +27,7 @@ def seller_dashboard(request):
     try:
         seller = request.user.profileseller
     except ProfileSeller.DoesNotExist:
-        messages.error(request, "No seller profile found for this user.")
+        messages.error(request, "لا يتوفر بروفايل لهذا المستخدم", "alert-danger")
         return redirect("main:home_view")
 
     # Filter data
@@ -71,7 +71,7 @@ def seller_add_product(request: HttpRequest):
     try:
         seller = request.user.profileseller
     except ProfileSeller.DoesNotExist:
-        messages.error(request, "No seller profile found for this user.")
+        messages.error(request, "لا يتوفر بروفايل لهذا المستخدم", "alert-danger")
         return redirect("main:home_view")
 
     cars = Car.objects.all()
@@ -116,10 +116,10 @@ def seller_add_product(request: HttpRequest):
                 car_obj = Car.objects.get(id=car_id)
                 product.car.add(car_obj)
 
-            messages.success(request, "تمت اضافة القطعة")
+            messages.success(request, "تمت اضافة القطعة", "alert-success")
             return redirect("seller:seller_dashboard")
         except Part.DoesNotExist:
-            messages.error(request, "اكمل جميع الحقول")
+            messages.error(request, "اكمل جميع الحقول", "alert-danger")
         except Exception as e:
             messages.error(request, f"حصلت مشكلة{e}")
 
@@ -140,7 +140,7 @@ def update_product(request, product_id):
     try:
         seller = request.user.profileseller
     except ProfileSeller.DoesNotExist:
-        messages.error(request, "No seller profile found for this user.")
+        messages.error(request, "لا يتوفر بروفايل لهذا المستخدم", "alert-danger")
         return redirect("main:home_view")
 
     product = get_object_or_404(Product, id=product_id, seller=seller)
@@ -166,7 +166,7 @@ def update_product(request, product_id):
 
         # Validate required fields
         if not category_id or not part_id or not price or not description:
-            messages.error(request, "Category, Part, price, and description are required fields.")
+            messages.error(request, "يتوجب تعبئة جميع الحقول المطلوبة نوع القطعة، والقطعة، والسعر", "alert-danger")
             return render(
                 request,
                 "seller/edit_product.html",
@@ -205,10 +205,10 @@ def update_product(request, product_id):
                 car_obj = get_object_or_404(Car, id=car_id)
                 product.car.add(car_obj)
 
-            messages.success(request, "Product updated successfully!")
+            messages.success(request, "تم التحديث بنجاح", "alert-success")
             return redirect("seller:seller_dashboard")
         except Exception as e:
-            messages.error(request, f"There was an error updating the product: {e}")
+            messages.error(request, f"خطأ أثناء تحديث المنتج: {e}", "alert-danger")
 
     selected_cars = product.car.values_list('id', flat=True)
 
@@ -270,7 +270,7 @@ def seller_profile_view(request, seller_id):
                     rating=rating,
                     comment=comment,
                 )
-                messages.success(request, "Review submitted successfully!")
+                messages.success(request, "تم تسجيل التقييم بنجاح", "alert-success")
                 return redirect(request.path)
 
         paginator = Paginator(products, 8)
@@ -291,7 +291,7 @@ def seller_profile_view(request, seller_id):
         return render(request, "sellers/sellers_profiles.html", context)
 
     except NoReverseMatch:
-        messages.error(request, "Error in URL routing. Page not available.")
+        messages.error(request, "الصفحة غير متوفرة يرجى التأكد من الرابط", "alert-danger")
         return redirect("main:home_view")
 
 # def order_item_view(request,cart_id:Cart):
@@ -311,7 +311,7 @@ def seller_order_list_view(request):
     try:
         seller = request.user.profileseller
     except ProfileSeller.DoesNotExist:
-        messages.error(request, "This user does not have a seller profile.")
+        messages.error(request, "لا يتوفر بروفايل لهذا المستخدم", "alert-danger")
         return redirect("main:home_view")
 
     pending_orders = OrderItem.objects.filter(seller=seller, status=OrderItem.Status.PENDING)
@@ -331,13 +331,13 @@ def deny_order_item(request, order_item_id):
     try:
         seller = request.user.profileseller
     except ProfileSeller.DoesNotExist:
-        messages.error(request, "No seller profile found.")
+        messages.error(request, "لا يتوفر بروفايل لهذا للبائع", "alert-danger")
         return redirect("main:home_view")
 
     order_item = get_object_or_404(OrderItem, id=order_item_id, seller=seller)
     order_item.status = OrderItem.Status.DENIED
     order_item.save()
-    messages.success(request, "You have denied the order.")
+    messages.success(request, "تم رفض المنتج", "alert-success")
     return redirect("seller:seller_order_list_view")
 
 
@@ -346,7 +346,7 @@ def accepted_order_list_view(request):
     try:
         seller = request.user.profileseller
     except ProfileSeller.DoesNotExist:
-        messages.error(request, "لا يوجد ملف شخصي للبائع لهذا المستخدم.")
+        messages.error(request, "لا يوجد ملف شخصي للبائع لهذا المستخدم.", "alert-danger")
         return redirect("main:home_view")
 
     accepted_orders = OrderItem.objects.filter(seller=seller, status=OrderItem.Status.ACCEPTED)
@@ -362,7 +362,7 @@ def order_detail_view(request, order_item_id):
     try:
         seller = request.user.profileseller
     except ProfileSeller.DoesNotExist:
-        messages.error(request, "لا يوجد ملف شخصي للبائع لهذا المستخدم.")
+        messages.error(request, "لا يوجد ملف شخصي للبائع لهذا المستخدم.", "alert-danger")
         return redirect("main:home_view")
 
     order_item = get_object_or_404(OrderItem, id=order_item_id, seller=seller)
@@ -382,14 +382,14 @@ def mark_as_delivered_view(request, order_item_id):
     try:
         seller = request.user.profileseller
     except ProfileSeller.DoesNotExist:
-        messages.error(request, "لا يوجد ملف شخصي للبائع لهذا المستخدم.")
+        messages.error(request, "لا يوجد ملف شخصي للبائع لهذا المستخدم.", "alert-danger")
         return redirect("main:home_view")
 
     order_item = get_object_or_404(OrderItem, id=order_item_id, seller=seller)
     order_item.status = OrderItem.Status.DELIVERED
     order_item.save()
 
-    messages.success(request, "تم وضع الطلب على أنه تم التوصيل.")
+    messages.success(request, "تم وضع الطلب على أنه تم التوصيل.", "alert-success")
     return redirect("seller:order_detail_view", order_item_id=order_item.id)
 
 
@@ -398,7 +398,7 @@ def delivered_orders_history_view(request):
     try:
         seller = request.user.profileseller
     except ProfileSeller.DoesNotExist:
-        messages.error(request, "لا يوجد ملف شخصي للبائع لهذا المستخدم.")
+        messages.error(request, "لا يوجد ملف شخصي للبائع لهذا المستخدم.", "alert-danger")
         return redirect("main:home_view")
 
     delivered_orders = OrderItem.objects.filter(seller=seller, status=OrderItem.Status.DELIVERED)
@@ -463,7 +463,7 @@ def accept_order_item(request, order_item_id):
     try:
         seller = request.user.profileseller
     except ProfileSeller.DoesNotExist:
-        messages.error(request, "No seller profile found.")
+        messages.error(request, "لا يوجد بروفايل لهذا المستخدم", "alert-danger")
         return redirect("main:home_view")
 
     order_item = get_object_or_404(OrderItem, id=order_item_id, seller=seller)
@@ -473,7 +473,7 @@ def accept_order_item(request, order_item_id):
     # Notify the customer
     # send_order_status_notification_to_customer(order_item.customer, "تم قبول طلبك، الطلب قيد التوصيل")
 
-    messages.success(request, "You have accepted the order.")
+    messages.success(request, "تم قبول الطلبية بنجاح", "alert-success")
     return redirect("seller:seller_order_list_view")
 
 

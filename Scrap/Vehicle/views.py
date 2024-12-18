@@ -13,10 +13,10 @@ def new_brand(request: HttpRequest):
         brand_form = BrandForm(request.POST, request.FILES)  
         if brand_form.is_valid():
             brand_form.save()  
-            messages.success(request, "Brand added successfully!")
+            messages.success(request, "تم اضافة الماركة بنجاح", "alert-success")
             return redirect('main:home_view')  
         else:
-            messages.error(request, "brand can't be added")
+            messages.error(request, "لا يمكن اضافة الماركة", "alert-danger")
     else:
         brand_form = BrandForm()
 
@@ -28,10 +28,10 @@ def new_car(request: HttpRequest):
         car_form = CarForm(request.POST, request.FILES)
         if car_form.is_valid():
             car_form.save()
-            messages.success(request, "Car added successfully!")
+            messages.success(request, "تم اضافة السيارة بنجاح", "alert-success")
             return redirect('main:home_view')  
         else:
-            messages.error(request, "Car can't be added")
+            messages.error(request, "خطأ عدم امكانية اضافة السيارة", "alert-danger")
     else:
         car_form = CarForm()
 
