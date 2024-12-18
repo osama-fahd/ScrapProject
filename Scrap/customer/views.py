@@ -99,8 +99,12 @@ def add_cart(request: HttpRequest, product_id: int):
             return redirect('main:home_view')
         
       cart_item.save()
+      
       messages.success(request, "تمت إضافة المنتج إلى عربة التسوق الخاصة بك.", "alert-success")
-
+      # Check if there's a next parameter
+      next_url = request.GET.get('next')
+      if next_url:
+         return redirect(next_url)
       return redirect('customer:view_cart')
    except Exception as e:
       messages.error(request, f" حدث خطأ: {e}", "alert-danger")

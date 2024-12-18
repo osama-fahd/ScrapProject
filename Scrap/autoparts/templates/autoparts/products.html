@@ -94,7 +94,32 @@
                             </div>
                           
                             <div class="mt-4">
-                                <a href="{% url 'customer:add_cart' product.id %}" class="btn btn-custom w-100">اضافة للسلة</a>
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-custom w-100" data-bs-toggle="modal" data-bs-target="#staticBackdrop-{{ product.id }}">
+                                    اضافة لعربة التسوق <i class="bi bi-cart-plus"></i>
+                                </button>
+                                <!-- Modal -->
+                                <div class="modal fade" id="staticBackdrop-{{ product.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                        <h5 class="modal-title" id="staticBackdropLabel">اضافة قطعة</h5>
+                                        <button type="button" class="btn-close m-0" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>تم اضافة القطعة لعربة التسوق</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <a href="{% url 'customer:add_cart' product.id %}?next={{ request.path|urlencode }}">
+                                                <button type="button" class="btn btn-custom" data-bs-dismiss="modal">متابعة التسوق</button>
+                                            </a>
+                                            <a href="{% url 'customer:add_cart' product.id %}">
+                                                <button type="button" class="btn btn-custom">إكمال عملية الشراء</button>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>                                                                
                             </div>
                           
                         </div>
