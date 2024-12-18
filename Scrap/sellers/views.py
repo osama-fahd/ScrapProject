@@ -8,7 +8,7 @@ from django.http import HttpRequest
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.db.models import Avg
-from customer.models import Cart,CartItem
+from customer.models import Cart,CartItem, CustomerSellersHistorty
 from .models import OrderItem
 from twilio.rest import Client
 from django.conf import settings
@@ -388,6 +388,11 @@ def mark_as_delivered_view(request, order_item_id):
     order_item = get_object_or_404(OrderItem, id=order_item_id, seller=seller)
     order_item.status = OrderItem.Status.DELIVERED
     order_item.save()
+
+    # save to CustomerSellersHistorty so user can add review on seller
+    customer = order_item.customer
+    csHistorty_obj = CustomerSellersHistorty(sellers=seller, customer=customer)
+    csHistorty_obj.save()
 
     messages.success(request, "تم وضع الطلب على أنه تم التوصيل.", "alert-success")
     return redirect("seller:order_detail_view", order_item_id=order_item.id)
