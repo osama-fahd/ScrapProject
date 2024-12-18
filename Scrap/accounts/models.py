@@ -56,7 +56,7 @@ class ProfileSeller(models.Model):
     company_name = models.CharField(max_length=255)
     google_map_address = models.URLField(blank=True)
     address = models.CharField(max_length=300)
-    commercial_register = models.IntegerField(max_length=10)
+    commercial_register = models.IntegerField()
     brands = models.ManyToManyField(Brand)
     
     

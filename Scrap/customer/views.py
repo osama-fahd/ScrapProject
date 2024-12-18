@@ -8,17 +8,30 @@ from django.contrib.auth.models import User
 from sellers.models import OrderItem
 
 
-
 def profile_customer(request:HttpRequest):
    if not request.user.is_authenticated:
-      messages.warning(request, "يمكن فقط للمستخدمين المسجلين رؤية ملف الشخصي", "alert-warning")
+      messages.warning(request, "يمكن فقط للمستخدمين المسجلين رؤية الملف الشخصي", "alert-warning")
       return redirect("accounts:sign_in")
     
-   
-   profile =  ProfileCustomer.objects.get(user=request.user)
+   try:
+      customer =  ProfileCustomer.objects.get(user=request.user)
+   except ProfileCustomer.DoesNotExist:
+        messages.error(request, "لا يوجد لديك حساب مسجل")
+        return redirect("accounts:sign_up")
+     
+   pending_orders = OrderItem.objects.filter(customer=customer, status=OrderItem.Status.PENDING)
+   accepted_orders = OrderItem.objects.filter(customer=customer, status=OrderItem.Status.ACCEPTED)
+   denied_orders = OrderItem.objects.filter(customer=customer, status=OrderItem.Status.DENIED)
 
+   context = {
+        "pending_orders": pending_orders,
+        "accepted_orders": accepted_orders,
+        "denied_orders": denied_orders,
+        'profile': customer,
+    }
  
-   return render(request, 'customer/profile_customer.html',{'profile': profile})
+   return render(request, 'customer/customer_orders.html', context)
+
 
 def update_profile(request:HttpRequest):
    if not request.user.is_authenticated:

@@ -61,6 +61,49 @@
     line-height: 1.6;
 }
 
+.header-gif {
+    position: relative;
+    overflow: hidden; 
+    height: 60vh; 
+}
+
+.header-gif video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: 1; 
+    transform: translate(-50%, -50%);
+    object-fit: cover; 
+    filter: brightness(0.6); 
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.7); 
+}
+
+.hero-text-header {
+    position: relative; 
+    z-index: 2; 
+    text-align: center; 
+    margin-right: 20%;
+    margin-left: 20%;
+}
+
+.hero-title-header {
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    font-size: 3.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.container-background {
+    background-image: url("/static/images/scrap_background.png");
+    background-size: cover; 
+    background-position: center; 
+    padding: 2rem; 
+}
+
 
 /*** media quries ***/
 @media (max-width: 768px) {

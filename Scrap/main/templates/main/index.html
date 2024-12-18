@@ -4,16 +4,34 @@
 
 {% block title %}سكراب | التشليح بين يديك{% endblock %}
 
-{% block style %}<link rel="stylesheet" href="{% static 'css/index.css' %}">{% endblock %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% endblock %}
 
 {% block content %}
 <!-- hero section سكشن لعرض الهيرو -->
+<section class="hero">
+    <div class="row header-gif">
+        <div class="col">
+            <video autoplay loop muted>
+                <source src="{% static 'videos/autoparts_promo.mp4' %}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="col">
+                <div class="hero-text-header d-flex flex-column justify-content-center align-items-center" style="height: 100%;"> 
+                    <h1 class="hero-title-header">وفقًا للإحصائيات، تصل نسبة القطع التي تباع من سيارات التشليح إلى 70% من إجمالي المبيعات.</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <section class="hero">
     <div class="row row-cols-md-2">
         <div class="col div-custom">
             <img src="{% static 'images/pexels-fuzzy.jpg' %}" alt="car decoration image">
         </div>
-        <div class="col">
+        <div class="col container-background">
             <div class="hero-text div-custom d-flex flex-column text-center">
                 <h1 class="hero-title">سكراب</h1>
                 <p>متجر متخصص لبيع وشراء قطع سيارات التشليح</p>

@@ -23,9 +23,11 @@
             <nav class="navbar navbar-expand-lg pt-3 pb-3">
                 <div class="container-fluid">
                   <a class="navbar-brand" href="{% url 'main:home_view' %}">
+
                     <h3 class="fustat_heading">
                       سكراب
                     </h3>
+
                   </a>
                   <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -35,64 +37,88 @@
                       <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="{% url 'main:home_view' %}">الصفحة الرئيسة</a>
                       </li>
-                      {% if request.user.is_authenticated and request.user|is_in_group_customer %}
-                      <li class="nav-item d-flex">
-                        <h5 class="text-white my-auto">
-                          | مرحبا {{request.user.first_name}} |
-                          <!-- request.user.username -->
-                        </h5>
+                        {% if request.user.is_authenticated and request.user|is_in_group_customer %}
+                          <li class="nav-item d-flex">
+
+                            <h5 class="text-white my-auto">
+                              | مرحبا {{request.user.first_name}} |
+                              <!-- request.user.username -->
+                            </h5>
+                            
+                            <li class="nav-item">
+                              <a class="nav-link active" href="{% url 'customer:view_cart' %}">سلة التسوق</a>
+                            </li>
+
+                            <li class="nav-item">
+                              <a class="nav-link active" href="{% url 'customer:profile_customer' %}"> الطلبات</a>
+                            </li>
+                          </li>
                         
-                        <li class="nav-item">
-                          <a class="nav-link active" href="{% url 'customer:view_cart' %}">سلة التسوق</a>
-                        </li>
+                        {% endif %}
+                        {% if request.user.is_authenticated and request.user|is_in_group_seller %}
+                          <li class="nav-item d-flex">
+
+                            <h5 class="text-white my-auto">
+                              | مرحبا {{request.user.profileseller.company_name}} |
+                              <!-- request.user.username -->
+                            </h5>
+
+                            <li class="nav-item">
+                              <a class="nav-link active" href="{% url 'seller:seller_profile_view' request.user.profileseller.id %}">صفحة البائع</a>
+                            </li>
+
+                            <li class="nav-item">
+                              <a class="nav-link active" href="{% url 'seller:seller_add_product' %}">عرض قطعة جديدة  </a>
+                            </li>
+
+                            <li class="nav-item">
+                              <a class="nav-link active" href="{% url 'seller:seller_dashboard' %}">ادارة المخزون </a>
+                            </li>
+
+                            <li class="nav-item">
+                              <a class="nav-link active" href="{% url 'seller:seller_order_list_view' %}">ادارة الطلبات </a>
+                            </li>
+
+                          </li>
+                        {% endif %}
 
                         <li class="nav-item">
-                          <a class="nav-link active" href="#"> الطلبات</a>
+                          <a class="nav-link active" href="#">قطع الغيار</a>
                         </li>
-                      </li>
+                    
+                        
+                        {% if request.user.is_authenticated %}
+                          <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'accounts:log_out' %}">تسجيل الخروج</a>
+                          </li>
+                        {% else %}
+                          <li class="nav-item dropdown">
+                            <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                              تسجيل الدخول للبائع
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                              <li><a class="dropdown-item" href="{% url 'accounts:seller_sign_up' %}">تسجيل عضوية جديدة</a></li>
+                              <li><a class="dropdown-item" href="{% url 'accounts:sign_in' %}?next={{request.path}}">تسجيل الدخول</a></li>
+                            </ul>
+                          </li>
 
-                      {% endif %}
-                      <li class="nav-item">
-                        <a class="nav-link active" href="#">قطع الغيار</a>
-                      </li>
-                      {% if request.user.is_authenticated and request.user|is_in_group_seller %}
-                        <li class="nav-item">
-                          <a class="nav-link active" href="{% url 'seller:seller_dashboard' %}">صفحة البائع</a>
-                        </li>
-                      {% endif %}
+                  
+                          <li class="nav-item dropdown">
+                            <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                              تسجيل\تسجيل الدخول
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                              <li><a class="dropdown-item" href="{% url 'accounts:sign_up' %}">تسجيل عضوية جديدة</a></li>
+                              <li><a class="dropdown-item" href="{% url 'accounts:sign_in' %}?next={{request.path}}">تسجيل الدخول</a></li>
+                            </ul>
+                          </li>
+                        {% endif %}
 
-                      {% if not request.user.is_authenticated %}
-                      <li class="nav-item dropdown">
-                        <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                          تسجيل الدخول للبائع
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                          <li><a class="dropdown-item" href="{% url 'accounts:seller_sign_up' %}">تسجيل عضوية جديدة</a></li>
-                          <li><a class="dropdown-item" href="{% url 'accounts:sign_in' %}?next={{request.path}}">تسجيل الدخول</a></li>
-                        </ul>
-                      </li>
-                      {% endif %}
-                      <li class="nav-item">
-                        <a class="nav-link active" href="#">تواصل معنا</a>
-                      </li>
-                      
-                      <!-- ملاحظة تم اخفاء تسجيل الدخول باستخدام ديسبلي مؤقتا -->
-                      {% if request.user.is_authenticated %}
                         <li class="nav-item">
-                          <a class="nav-link active" href="{% url 'accounts:log_out' %}">تسجيل الخروج</a>
+                          <a class="nav-link active" href="{% url 'main:contact_view' %}">تواصل معنا</a>
                         </li>
-                      {% else %}
-                        <li class="nav-item dropdown">
-                          <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            تسجيل\تسجيل الدخول
-                          </a>
-                          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="{% url 'accounts:sign_up' %}">تسجيل عضوية جديدة</a></li>
-                            <li><a class="dropdown-item" href="{% url 'accounts:sign_in' %}?next={{request.path}}">تسجيل الدخول</a></li>
-                          </ul>
-                        </li>
-                      {% endif %}
-<!-- 
+
+                        <!-- 
                       <li class="nav-item" style="display: none;">
                         <a class="nav-link" href="#">تسجيل الخروج</a>
                       </li> -->

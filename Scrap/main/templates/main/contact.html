@@ -1,0 +1,33 @@
+{% extends 'main/base.html' %}
+
+{% block title %} Contact Us {% endblock %}
+
+{% block content %}
+
+{% load static %}
+
+<div class="mt-5 d-flex flex-column justify-content-center align-items-center w-100">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-sm-10 col-lg-8 transparent-bg">
+                <div class="d-flex flex-column justify-content-start align-items-start">
+                    <h2 class="m-0">املأ النموذج للتواصل</h2>
+                </div>
+                <div class="line mb-4"></div>
+
+                <form class="d-flex flex-column gap-4" action="{% url 'main:contact_view' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="text" name="first_name" placeholder="الاسم الكامل" class="form-control" required/>
+              
+                    <input type="text" name="username" class="form-control" required placeholder="رقم الجوال" />
+                    
+                    <textarea name="رسالتك" class="form-control" required style="height: 100px;"> </textarea>
+
+                    <input type="submit" value="ارسل" class="btn" style="background-color: #fcd15c; color: black"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

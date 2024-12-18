@@ -33,5 +33,5 @@ class OrderHistorty(models.Model):
 
 
 class CustomerSellersHistorty(models.Model):
-    sellers = models.ForeignKey(ProfileSeller, on_delete=models.CASCADE,  unique=True)
+    sellers = models.ForeignKey(ProfileSeller, on_delete=models.CASCADE)
     customer = models.OneToOneField(ProfileCustomer, on_delete=models.CASCADE)

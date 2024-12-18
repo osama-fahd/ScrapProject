@@ -22,11 +22,11 @@ class OrderItem(models.Model):
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE)
     customer = models.ForeignKey(
-        ProfileCustomer, null=True, on_delete=models.PROTECT)
+        ProfileCustomer, on_delete=models.PROTECT)
     seller = models.ForeignKey(
-        ProfileSeller, null=True, on_delete=models.PROTECT)
+        ProfileSeller, on_delete=models.PROTECT)
     date_created = models.DateTimeField(
-        auto_now_add=True, null=True)
+        auto_now_add=True)
 
 
 

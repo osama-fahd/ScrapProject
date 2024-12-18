@@ -1,0 +1,81 @@
+{% extends 'main/base.html' %}
+
+{% load static %}
+
+{% block title %}طلباتي  {% endblock %}
+
+{% block style %}{% endblock %}
+
+{% block content %}
+
+<section class="container" style="padding: 40px 0;">
+    <div class="card mb-3" style="background-color: #fee8d36e; border: none; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); margin: auto;">
+        <div class="card-body" style="line-height: 3;">
+            <h4 class="card-title text-center">{{ profile.user.first_name }} {{ profile.user.last_name }}</h4>
+            <h5 class="card-subtitle mb-3 text-muted text-center">الإيميل: {{ profile.user.email }}</h5>
+            <h6 class="card-subtitle mb-3 text-muted text-center">رقم جوال: {{ profile.user.username }}</h6>
+            <p class="card-text text-center">العنوان: {{ profile.neighborhood }}</p>
+            <p class="card-text text-center">تاريخ الانضمام: {{ profile.registration_date }}</p>
+            <div class="text-center">
+                <a href="{% url 'customer:update_profile' %}" class="btn btn-warning">تعديل الملف</a>
+            </div>
+        </div>
+    </div>
+</section>
+ 
+<section class="container">
+    <h1 class="text-center my-4">الطلبات</h1>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="table-custom">
+                <tr>
+                    <th>المنتج</th>
+                    <th>البائع</th>
+                    <th>تاريخ الطلب</th>
+                    <th>الحالة</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order_item in pending_orders %}
+                    <tr>
+                        <td>{{ order_item.product.part }}</td>
+                        <td>{{ order_item.seller.company_name }}</td>
+                        <td>{{ order_item.date_created }}</td>
+                        <td>{{ order_item.get_status_display }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center">لا توجد طلبات معلقة</td>
+                    </tr>
+                {% endfor %}
+                
+                {% for order_item in accepted_orders %}
+                    <tr>
+                        <td>{{ order_item.product.part }}</td>
+                        <td>{{ order_item.seller.company_name }}</td>
+                        <td>{{ order_item.date_created }}</td>
+                        <td>{{ order_item.get_status_display }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center">لا توجد طلبات تمت الموافقة عليها</td>
+                    </tr>
+                {% endfor %}
+
+                {% for order_item in denied_orders %}
+                    <tr>
+                        <td>{{ order_item.product.part }}</td>
+                        <td>{{ order_item.seller.company_name }}</td>
+                        <td>{{ order_item.date_created }}</td>
+                        <td>{{ order_item.get_status_display }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center">لا توجد طلبات</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}
