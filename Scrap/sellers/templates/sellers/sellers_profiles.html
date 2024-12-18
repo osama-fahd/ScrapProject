@@ -5,6 +5,31 @@
 
 {% block style %}
 <link rel="stylesheet" href="{% static 'css/seller_profile.css' %}">
+<style>
+    .star-rating {
+        direction: rtl;
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: center;
+    }
+    .star-rating input[type="radio"] {
+        display: none;
+    }
+    .star-rating label {
+        font-size: 2rem;
+        color: #ddd;
+        cursor: pointer;
+        transition: color 0.2s;
+    }
+    .star-rating input[type="radio"]:checked ~ label,
+    .star-rating label:hover,
+    .star-rating label:hover ~ label {
+        color: gold;
+    }
+    .star-rating label:hover ~ label {
+        color: #ccc;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -31,166 +56,179 @@
     </div>
 
     <div class="row">
+        <!-- Sidebar Section -->
         <div class="col-md-3">
-            <div class="sidebar">
+            <div class="sidebar p-3 bg-light rounded shadow-sm">
                 <div class="product-count mb-3">
                     <strong>{{ products|length }} منتجات</strong>
                 </div>
-
+    
                 <form method="GET">
-                    <div class="filter-section">
+                    <div class="filter-section mb-4">
                         <h5>بحث</h5>
                         <input type="text" name="search" class="form-control" placeholder="ابحث عن المنتجات" value="{{ request.GET.search }}">
                     </div>
-
-                     <div class="filter-section">
+    
+                    <div class="filter-section mb-4">
                         <h5>الترتيب</h5>
                         <select name="sort" class="form-select" onchange="this.form.submit()">
                             <option value="">اختيار</option>
                             <option value="price_asc" {% if request.GET.sort == 'price_asc' %}selected{% endif %}>السعر: من الأقل للأعلى</option>
                             <option value="price_desc" {% if request.GET.sort == 'price_desc' %}selected{% endif %}>السعر: من الأعلى للأقل</option>
-                            <option value="rating" {% if request.GET.sort == 'rating' %}selected{% endif %}>التقييم</option>
                             <option value="newest" {% if request.GET.sort == 'newest' %}selected{% endif %}>الأحدث</option>
                         </select>
                     </div>
+    
 
-
-
-                     <div class="filter-section">
+    
+                    <div class="filter-section mb-4">
                         <h5>حدد ميزانيتك</h5>
-                        <div class="price-range">
-                            <input type="number" name="min_price" class="form-control" placeholder="أدنى" value="{{ request.GET.min_price }}">
-                            <span>-</span>
-                            <input type="number" name="max_price" class="form-control" placeholder="أعلى" value="{{ request.GET.max_price }}">
+                        <div class="price-range d-flex align-items-center">
+                            <input type="number" name="min_price" class="form-control me-2" placeholder="أدنى" value="{{ request.GET.min_price }}">
+                            <span class="mx-1">-</span>
+                            <input type="number" name="max_price" class="form-control ms-2" placeholder="أعلى" value="{{ request.GET.max_price }}">
                         </div>
                     </div>
+    
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary w-100">بحث</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    
+         <div class="col-md-9">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="h4">المنتجات</h2>
+            </div>
+    
+            <div class="row g-4">
+                {% for product in products %}
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                        <div class="card product-card h-100 shadow-sm">
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                            {% else %}
+                                <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="No Image Available">
+                            {% endif %}
+                            <div class="card-body text-center">
+                                <h5 class="card-title mb-2">{{ product.part.name }}</h5>
+                                <p class="text-muted mb-2">{{ product.price }} ريال</p>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="col-12 text-center">
+                        <p class="text-muted">لا توجد منتجات متاحة.</p>
+                    </div>
+                {% endfor %}
+            </div>
+    
+             {% if products.has_other_pages %}
+                <div class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        {% if products.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ products.previous_page_number }}" aria-label="Previous">
+                                    &laquo;
+                                </a>
+                            </li>
+                        {% endif %}
+                        {% for num in products.paginator.page_range %}
+                            {% if products.number == num %}
+                                <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                            {% elif num > products.number|add:'-3' and num < products.number|add:'3' %}
+                                <li class="page-item"><a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ num }}">{{ num }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        {% if products.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ products.next_page_number }}" aria-label="Next">
+                                    &raquo;
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <h2 class="h4 mt-5 mb-3 text-center">التقييمات</h2>
+    {% if reviews %}
+        <div class="list-group mb-5">
+            {% for review in reviews %}
+                <div class="list-group-item">
+                    <div class="d-flex justify-content-between mb-1">
+                        <strong>{{ review.customer.user.username }}</strong>
+                        <small class="text-muted">{{ review.created_at|date:"Y-m-d" }}</small>
+                    </div>
+                    <div class="star-rating mb-2">
+                        {% for i in "12345"|make_list %}
+                            {% if forloop.counter <= review.rating %}
+                                <span>★</span>
+                            {% else %}
+                                <span>☆</span>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <p class="mb-0">{{ review.comment }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-muted text-center">لا توجد تقييمات بعد.</p>
+    {% endif %}
+</section>
 
-                    <div class="filter-section text-center mt-4">
-                        <button type="submit" class="btn btn-primary w-100 ">بحث</button>
+    {% if user.is_authenticated and has_delivered_order %}
+        <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <form method="POST" class="modal-content">
+                {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="reviewModalLabel">إضافة تقييم</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-4">
+                            <label class="form-label">تقييمك</label>
+                            <div class="star-rating">
+                                <input type="radio" id="star5" name="rating" value="5" required>
+                                <label for="star5" title="★★★★★">★</label>
+                                
+                                <input type="radio" id="star4" name="rating" value="4" required>
+                                <label for="star4" title="★★★★☆">★</label>
+                                
+                                <input type="radio" id="star3" name="rating" value="3" required>
+                                <label for="star3" title="★★★☆☆">★</label>
+                                
+                                <input type="radio" id="star2" name="rating" value="2" required>
+                                <label for="star2" title="★★☆☆☆">★</label>
+                                
+                                <input type="radio" id="star1" name="rating" value="1" required>
+                                <label for="star1" title="★☆☆☆☆">★</label>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="comment" class="form-label">تعليقك</label>
+                            <textarea id="comment" name="comment" class="form-control" rows="4" placeholder="اكتب تقييمك هنا..." required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                        <button type="submit" class="btn btn-primary">إرسال</button>
                     </div>
                 </form>
             </div>
         </div>
 
-        <!-- Right Main Section -->
-        <div class="col-md-9">
-            <!-- Products Section -->
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h2 class="h4">المنتجات</h2>
-            </div>
+        <style>
 
-            <div class="row g-4">
-                {% for product in products %}
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                    <div class="card product-card h-100">
-                        {% if product.image %}
-                            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
-                        {% else %}
-                            <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="No Image Available">
-                        {% endif %}
-                        <div class="card-body text-center">
-                            <h5 class="card-title mb-1">{{ product.part.name }}</h5>
-                            <p class="text-muted mb-2">{{ product.price }} ريال</p>
-                            {% comment %} <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-primary btn-sm">تفاصيل المنتج</a> {% endcomment %}
-                        </div>
-                    </div>
-                </div>
-                {% empty %}
-                <div class="col-12 text-center">
-                    <p class="text-muted">لا توجد منتجات متاحة.</p>
-                </div>
-                {% endfor %}
-            </div>
-
-            {% if products.has_other_pages %}
-            <div aria-label="Page navigation" class="mt-4">
-                <ul class="pagination justify-content-center">
-                    {% if products.has_previous %}
-                    <li class="page-item">
-                        <a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ products.previous_page_number }}" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                    {% else %}
-                    <li class="page-item disabled">
-                        <span class="page-link">&laquo;</span>
-                    </li>
-                    {% endif %}
-
-                    {% for num in products.paginator.page_range %}
-                        {% if products.number == num %}
-                            <li class="page-item active"><span class="page-link">{{ num }}</span></li>
-                        {% elif num > products.number|add:'-3' and num < products.number|add:'3' %}
-                            <li class="page-item"><a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ num }}">{{ num }}</a></li>
-                        {% endif %}
-                    {% endfor %}
-
-                    {% if products.has_next %}
-                    <li class="page-item">
-                        <a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ products.next_page_number }}" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                    {% else %}
-                    <li class="page-item disabled">
-                        <span class="page-link">&raquo;</span>
-                    </li>
-                    {% endif %}
-                </ul>
-            </div>
-            {% endif %}
-        </div>
-    </div>
-
-     <h2 class="h4 mt-5 mb-3 text-center">التقييمات</h2>
-    {% if reviews %}
-    <div class="list-group mb-5">
-        {% for review in reviews %}
-        <div class="list-group-item">
-            <div class="d-flex justify-content-between mb-1">
-                <strong>{{ review.customer.user.username }}</strong>
-                <small class="text-muted">{{ review.created_at|date:"Y-m-d" }}</small>
-            </div>
-            <div class="star-rating mb-2">
-                {% for i in "12345"|make_list %}
-                    {% if forloop.counter <= review.rating %}
-                        <span>★</span>
-                    {% else %}
-                        <span>☆</span>
-                    {% endif %}
-                {% endfor %}
-            </div>
-            <p class="mb-0">{{ review.comment }}</p>
-        </div>
-        {% endfor %}
-    </div>
-    {% else %}
-    <p class="text-muted text-center mb-5">لا توجد تقييمات بعد.</p>
+        </style>
     {% endif %}
 </section>
-
-{% if user.is_authenticated and has_delivered_order %}
-<div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <form method="post">
-            {% csrf_token %}
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="reviewModalLabel">إضافة تقييم</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
-                </div>
-                <div class="modal-body">
-                    {{ review_form.as_p }}
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
-                    <button type="submit" class="btn btn-primary">إرسال</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-{% endif %}
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-SCPCMt51fC91J5PlNfQ76YYwdNZf27gFgjJjGdtXWfawtFNNfpka4QZDckj+OqKe" crossorigin="anonymous"></script>
 {% endblock %}

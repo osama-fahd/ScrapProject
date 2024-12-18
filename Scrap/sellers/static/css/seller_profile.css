@@ -17,7 +17,7 @@ body {
 
 
 .profile-banner {
-    background: linear-gradient(135deg,rgb(241, 222, 185),rgb(126, 104, 52));
+    background: linear-gradient(135deg,rgb(241, 222, 185),rgb(94, 81, 52));
     color: white;
     padding: 3rem 1.5rem;
     border-radius: 10px;
@@ -71,12 +71,33 @@ body {
     height: 200px;
 }
 
-/* Adjust input widths for filters */
 .price-range input[type="number"] {
     width: 45%;
 }
 
-/* Reviews */
 .list-group-item .star-rating {
     margin-top: 0.5rem;
+}
+.star-rating {
+    direction: rtl;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+}
+.star-rating input[type="radio"] {
+    display: none;
+}
+.star-rating label {
+    font-size: 2rem;
+    color: #ddd;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.star-rating input[type="radio"]:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: gold;
+}
+.star-rating label:hover ~ label {
+    color: #ccc;
 }
