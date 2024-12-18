@@ -59,13 +59,19 @@ def products_view(request: HttpRequest, part_id):
     # Generate list of years for the dropdown
     years = range(year_range['min_year'], year_range['max_year'] + 1)
     
+    # Pagination
+    paginator = Paginator(products, 10)
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+    
     context = {
         "chosen_part": chosen_part,
-        "products": products,
+        "products": page_obj,
         "brands": brands,
         "cars": cars,
         "years": years,
-        "selected_year": request.GET.get("year", "")
+        "selected_year": request.GET.get("year", ""),
+        "page_obj": page_obj,
     }
 
     return render(request, "autoparts/products.html", context)

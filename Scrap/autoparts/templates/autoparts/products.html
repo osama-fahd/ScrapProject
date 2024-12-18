@@ -3,6 +3,8 @@
 
 {% block title %}{{ chosen_part.name }}{% endblock %}
 
+{% block style %}<link rel="stylesheet" href="{% static 'css/products.css' %}">{% endblock %}
+
 {% block content %}
 <section class="container">
     <!-- Filters -->
@@ -94,7 +96,32 @@
                             </div>
                           
                             <div class="mt-4">
-                                <a href="{% url 'customer:add_cart' product.id %}" class="btn btn-custom w-100">اضافة للسلة</a>
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-custom w-100" data-bs-toggle="modal" data-bs-target="#staticBackdrop-{{ product.id }}">
+                                    اضافة لعربة التسوق <i class="bi bi-cart-plus"></i>
+                                </button>
+                                <!-- Modal -->
+                                <div class="modal fade" id="staticBackdrop-{{ product.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                        <h5 class="modal-title" id="staticBackdropLabel">اضافة قطعة</h5>
+                                        <button type="button" class="btn-close m-0" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>تم اضافة القطعة لعربة التسوق</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <a href="{% url 'customer:add_cart' product.id %}?next={{ request.path|urlencode }}">
+                                                <button type="button" class="btn btn-custom" data-bs-dismiss="modal">متابعة التسوق</button>
+                                            </a>
+                                            <a href="{% url 'customer:add_cart' product.id %}">
+                                                <button type="button" class="btn btn-custom">إكمال عملية الشراء</button>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>                                                                
                             </div>
                           
                         </div>
@@ -108,6 +135,38 @@
         </div>
         {% endfor %}
     </div>
+    <!-- Pagination -->
+    {% if products.paginator.num_pages > 1 %}
+    <div aria-label="صفحة التنقل" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if products.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}{% if request.GET.brand %}brand={{ request.GET.brand }}&{% endif %}{% if request.GET.car %}car={{ request.GET.car }}&{% endif %}{% if request.GET.year %}year={{ request.GET.year }}&{% endif %}page={{ products.next_page_number }}" aria-label="التالي">
+                        <span aria-hidden="true">التالي</span>
+                    </a>
+                </li>
+            {% endif %}
+    
+            {% for num in products.paginator.page_range %}
+                {% if products.number == num %}
+                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                {% elif num > products.number|add:'-3' and num < products.number|add:'3' %}
+                    <li class="page-item">
+                        <a class="page-link" href="?{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}{% if request.GET.brand %}brand={{ request.GET.brand }}&{% endif %}{% if request.GET.car %}car={{ request.GET.car }}&{% endif %}{% if request.GET.year %}year={{ request.GET.year }}&{% endif %}page={{ num }}">{{ num }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+    
+            {% if products.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}{% if request.GET.brand %}brand={{ request.GET.brand }}&{% endif %}{% if request.GET.car %}car={{ request.GET.car }}&{% endif %}{% if request.GET.year %}year={{ request.GET.year }}&{% endif %}page={{ products.previous_page_number }}" aria-label="السابق">
+                        <span aria-hidden="true">السابق</span>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+    {% endif %}
 </section>
 {% endblock %}
 
