@@ -1,0 +1,28 @@
+.pagination {
+    direction: rtl;
+}
+
+.page-link {
+    border-radius: 0 !important;
+}
+
+/* Match your theme colors */
+.page-item.active .page-link {
+    background-color: var(--bs-secondary);
+    border-color: var(--bs-secondary);
+}
+
+/* Add margin between pagination items */
+.page-item {
+    margin: 0 2px;
+}
+
+/* Optional: style for the next/previous buttons */
+.page-link {
+    color: #333;
+    padding: 0.5rem 1rem;
+}
+
+.page-item:not(.active) .page-link:hover {
+    background-color: #f8f9fa;
+}
