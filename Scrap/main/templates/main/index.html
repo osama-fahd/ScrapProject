@@ -28,16 +28,29 @@
 
 <section class="hero">
     <div class="row row-cols-md-2">
-        <div class="col div-custom">
-            <img src="{% static 'images/pexels-fuzzy.jpg' %}" alt="car decoration image">
-        </div>
-        <div class="col container-background">
+        <div class="col  container-background2">
             <div class="hero-text div-custom d-flex flex-column text-center">
-                <h1 class="hero-title">سكراب</h1>
-                <p>متجر متخصص لبيع وشراء قطع سيارات التشليح</p>
-                <p>سجل عضويتك الآن وابدأ ببيع وشراء قطع سيارتك  </p>
-                <a href="#" class="btn btn-light">
-                    <h5>سجل عضوية جديدة</h5>
+                
+                <h1 class="hero-title">
+                    
+                    <!-- <div style="height: 50px; margin-left: 10px;"> 
+                        <img src="{% static 'images/autoparts_logo.png' %}" alt="Logo" class="logo" style="height: 50px; margin-left: 10px;">
+                    </div> -->
+                    سكراب
+                </h1>
+                <p class="hero-text-p ">متجر متخصص لبيع وشراء قطع سيارات التشليح</p>
+                
+            </div>
+        </div>
+        <div class="col  container-background">
+            <div class="hero-text div-custom d-flex flex-column text-center">
+                <p class="hero-text-p2 mb-5"> التشليح صار لك اقرب! </p>
+                <p class="hero-text-p">سجل عضويتك الآن وابدأ ببيع وشراء قطع سيارتك  </p>
+                <a href="{% url 'accounts:seller_sign_up' %}" class="btn btn-light">
+                    <h5>سجل عضوية بائع</h5>
+                </a>
+                <a href="{% url 'accounts:sign_up' %}" class="btn btn-light">
+                    <h5>سجل عضوية مشتري</h5>
                 </a>
             </div>
         </div>
