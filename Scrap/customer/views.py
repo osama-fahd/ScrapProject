@@ -16,7 +16,7 @@ def profile_customer(request:HttpRequest):
    try:
       customer =  ProfileCustomer.objects.get(user=request.user)
    except ProfileCustomer.DoesNotExist:
-        messages.error(request, "لا يوجد لديك حساب مسجل")
+        messages.error(request, "لا يوجد لديك حساب مسجل", "alert-danger")
         return redirect("accounts:sign_up")
      
    pending_orders = OrderItem.objects.filter(customer=customer, status=OrderItem.Status.PENDING)

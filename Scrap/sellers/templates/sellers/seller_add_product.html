@@ -15,7 +15,7 @@
                 {% csrf_token %}
                 
                 <select name="category" class="form-select">
-                    <option value="">Select category</option>
+                    <option value="">اختر تصنيف القطعة</option>
                     {% for category in categories %}
                         <option value="{{ category.id }}">{{ category.name }}</option>
                     {% endfor %}
@@ -24,64 +24,69 @@
 
 
                         <select name="part" class="form-select" >
-                            <option value="">Select part</option>
+                            <option value="">اختر القطعة</option>
                                {% for part in parts %}
                                     <option value="{{part.id}}">{{part.name}}</option>
                                {% endfor %}     
                         </select>
 
-                        <div class="part-section">
-                            <div class="d-flex flex-wrap gap-2 align-items-center">
-                                <select name="car" class="form-select" required>
-                                    <option value="">Select car</option>
+                        <!-- <div class="part-section"> -->
+                            <!-- <div class="d-flex flex-wrap gap-2 align-items-center"> -->
+                                <!-- <select name="car" class="form-select" required>
+                                    <option value="">select car</option>
                                        {% for car in cars %}
                                             <option value="{{car.id}}">{{car.name}}</option>
                                        {% endfor %}     
-                                </select>    
+                                </select>     -->
+
+                        <h5>السيارات المتوافقة مع القطعة:</h5>
+                        <div class="row row-cols-2 row-cols-md-3 align-items-center">
+                            {% for car in cars %}
+                            <div class="col">
+                                <input type="checkbox" name="car" value="{{ car.id }}" id="cars-{{ car.id }}" class="form-check-input" />
+                                <label for="cars-{{ car.id }}" class="check-label">{{ car.name }}</label>
+                            </div>
+                            {% endfor %}     
+                        </div>
 
 
                         <select name="part_direction" class="form-select" required>
-                            <option value="">يرجى الاختيار</option>
+                            <option value="">يرجى اختيار جهة القطعة إن وجد (مثال: شمعة يمين)</option>
                             {% for value, label in part_directions %}
                                 <option value="{{ value }}">{{ label }}</option>
                             
                             {% endfor %}
                         </select>
            
-                        <input type="number" name="stock" class="form-control w-full" placeholder="الكمية" required />
+                        <input type="number" name="stock" class="form-control w-full" placeholder="الكمية المتوفرة" required />
   
 
 
 
-                        <input type="text" name="condition" class="form-control" placeholder="حالة القطعة" required />
+                        <input type="text" name="condition" class="form-control" placeholder="حالة القطعة (مثال: يوجد خدش في الباب)" required />
 
-                        <input type="text" name="made" class="form-control" placeholder="وين صنعت" required />
+                        <input type="text" name="made" class="form-control" placeholder="الصناعة (مثال: الصين)" required />
 
-                        
-                        <input type="number" name="start_date" class="form-control" placeholder="صالحة من موديل" required  maxlength="4" minlength="4" />
-                        <span>TO</span>
-                        <input type="number" name="end_date" class="form-control" placeholder="الى هذا الموديل" required maxlength="4" minlength="4" />
+                        <h5>الموديلات المتوافقة مع القطعة</h5>
+                        <div class="d-flex gap-4">
+                            <input type="number" name="start_date" class="form-control" placeholder="2021" required  maxlength="2099" minlength="2000" />
+                            <span class="my-auto">إلى</span>
+                            <input type="number" name="end_date" class="form-control" placeholder="2023" required maxlength="2099" minlength="2000" />
+                        </div>
 
-                        <div> 
-                            <h5>تفاصيل القطعة</h5>
                     
-                            <textarea name="description" id="" class="form-control" placeholder="تفاصيل القطعة" required>
+                        <textarea name="description" id="" class="form-control" placeholder="تفاصيل القطعة (مثال: مكينة 4 سلندر)" required></textarea>
 
+                        <input type="number" name="price" class="form-control" placeholder="سعر القطعة (مثال: 400)" required />
 
-
-                        </textarea>
-
-                        <input type="number" name="price" class="form-control" placeholder="Price $$$" required />
-
-                    </div>
 
                     <div>
-                        <h5> هل ترغب في اضافة صورة؟:</h5>
+                        <h5> هل ترغب في اضافة صورة؟</h5>
                         <input type="file" name="logo" class="form-control" accept="images/" >
                     </div>
 
-                    <button type="submit" class="btn btn-custom">Add part</button>
-                </div>
+                    <button type="submit" class="btn btn-custom">اضافة للمخزون</button>
+                <!-- </div> -->
             </form>
         </div>
     </div>
