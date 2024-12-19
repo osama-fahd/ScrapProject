@@ -144,7 +144,7 @@ def sign_in(request: HttpRequest):
     if request.method == "POST":
         phone_number = request.POST.get("username")
         password = request.POST.get("password")
-        notify = request.POST.get("notify") == "1" 
+        notify = True 
 
         try:
             if notify:
