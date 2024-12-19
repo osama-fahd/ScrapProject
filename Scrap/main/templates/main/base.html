@@ -40,11 +40,12 @@
                       </li>
                         {% if request.user.is_authenticated and request.user|is_in_group_customer %}
                           <li class="nav-item d-flex">
-
-                            <h5 class="text-white my-auto">
+                            <a href="{% url 'customer:profile_customer' %}">
+                              <h5 class="text-white my-auto">
                               | مرحبا {{request.user.first_name}} |
                               <!-- request.user.username -->
-                            </h5>
+                              </h5>
+                            </a>
                             
                             <li class="nav-item">
                               <a class="nav-link active" href="{% url 'customer:view_cart' %}">سلة التسوق</a>
@@ -58,11 +59,12 @@
                         {% endif %}
                         {% if request.user.is_authenticated and request.user|is_in_group_seller %}
                           <li class="nav-item d-flex">
-
-                            <h5 class="text-white my-auto">
-                              | مرحبا {{request.user.profileseller.company_name}} |
-                              <!-- request.user.username -->
-                            </h5>
+                            <a href="{% url 'seller:seller_profile_view' request.user.profileseller.id %}">
+                              <h5 class="text-white my-auto">
+                                | مرحبا {{request.user.profileseller.company_name}} |
+                                <!-- request.user.username -->
+                              </h5>
+                            </a>
 
                             <li class="nav-item">
                               <a class="nav-link active" href="{% url 'seller:seller_profile_view' request.user.profileseller.id %}">صفحة البائع</a>

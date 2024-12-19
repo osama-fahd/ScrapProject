@@ -38,8 +38,8 @@
 {% block content %}
 <section class="container my-4">
     <div class="profile-banner mb-5">
-        <h1 class="display-5">{{ seller.company_name }}</h1>
-        <h5 class="text-white-30">{{ seller.address }}</h5>
+        <h1 class="display-5 mb-3">{{ seller.company_name }}</h1>
+        <h5 class="text-white-50 mb-3">{{ seller.address }}</h5>
         <p><strong>متوسط التقييم:</strong> {{ average_rating|floatformat:1 }} / 5</p>
         <div class="star-rating mb-3">
             {% for i in "12345"|make_list %}
@@ -188,7 +188,7 @@
             {% for review in reviews %}
                 <div class="list-group-item">
                     <div class="d-flex justify-content-between mb-1">
-                        <strong>{{ review.customer.user.username }}</strong>
+                        <strong>{{ review.customer.user.first_name }}</strong>
                         <small class="text-muted">{{ review.created_at|date:"Y-m-d" }}</small>
                     </div>
                     <div class="star-rating mb-2">

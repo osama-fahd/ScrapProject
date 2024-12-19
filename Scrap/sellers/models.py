@@ -27,6 +27,8 @@ class OrderItem(models.Model):
         ProfileSeller, on_delete=models.PROTECT)
     date_created = models.DateTimeField(
         auto_now_add=True)
+    quantity = models.PositiveIntegerField(default=1)
+    
 
 
 

@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block title %}Seller Inventory{% endblock %}
+{% block title %}ادارة المخزون {% endblock %}
 
 {% block style %}
 <link rel="stylesheet" href="{% static 'css/seller_dashboard.css' %}">
@@ -12,7 +12,7 @@
 {% block content %}
 <section class="container">
     <div class="d-flex flex-column flex-md-column flex-lg-row  align-items-center justify-content-center justify-content-lg-between w-100">
-        <h1 class="w-40">Seller Dashboard</h1>
+        <h1 class="w-40"> ادارة المخزون</h1>
         
         {% comment %} filter {% endcomment %}
         <!-- <div class="container-fluid"> -->
@@ -21,7 +21,7 @@
         {% csrf_token %}
         <div class="col-md">
             <select name="autoParts" class="form-select " title="Filter by Auto Parts">
-                <option value="">نوع القطعة</option>
+                <option value="">النوع </option>
                 {% for category in categories %}
                 <option value="{{ category.id }}" {% if request.GET.autoParts|default:'' == category.id|stringformat:"s" %}selected{% endif %}>{{ category.name }}</option>
                 {% endfor %}
@@ -30,7 +30,7 @@
     
         <div class="col-md">
             <select name="year" class="form-select" title="Filter by Year">
-                <option value="">Year</option>
+                <option value="">السنة</option>
                 {% for y in years %}
                 <option value="{{ y }}" {% if request.GET.year|default:'' == y|stringformat:"s" %}selected{% endif %}>{{ y }}</option>
                 {% endfor %}
@@ -38,24 +38,24 @@
         </div>
     
         <div class="col-md">
-            <select name="brand" class="form-select" title="Filter by Brand">
-                <option value="">Brand</option>
-                {% for brand in brands %}
-                <option value="{{ brand }}" {% if request.GET.brand|default:'' == brand %}selected{% endif %}>{{ brand }}</option>
+            <select name="parts" class="form-select" title="Filter by part">
+                <option value="">القطعة</option>
+                {% for part in parts %}
+                <option value="{{ part }}" {% if request.GET.part|default:'' == part %}selected{% endif %}>{{ part }}</option>
                 {% endfor %}
             </select>   
         </div>
         
         <div class="col-md">
             <select name="car" class="form-select" title="Filter by Car">
-                <option value="">Car</option>
+                <option value="">السيارة</option>
                 {% for car in cars %}
                 <option value="{{ car.id }}" {% if request.GET.car|default:'' == car.id|stringformat:"s" %}selected{% endif %}>{{ car.name }}</option>
                 {% endfor %}
             </select>       
         </div>
         <div class="col-md">
-            <input type="submit" value="Filter" class="btn mt-3 w-100"  title="Apply Filters" style="background-color: #fcd15c; color: black"/>
+            <input type="submit" value="البحث" class="btn mt-3 w-100"  title="Apply Filters" style="background-color: #fcd15c; color: black"/>
             <!-- <button type="submit" class="btn btn-custom mt-3" title="Apply Filters">Filter</button> -->
         </div>
     </form>
@@ -95,10 +95,10 @@
                         <div class="d-flex gap-2">
                             <a href="{% url 'seller:update_product' product.id %}" class="btn btn-primary btn-sm">تعديل</a>
                             
-                            <form method="post" action="#" onsubmit="return confirm('هل أنت متأكد أنك تريد حذف هذا المنتج؟');" class="m-0">
+                            <!-- <form method="post" action="#" onsubmit="return confirm('هل أنت متأكد أنك تريد حذف هذا المنتج؟');" class="m-0">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-danger btn-sm">حذف</button>
-                            </form>
+                            </form> -->
                             
                             
                             <a href="{% url 'seller:seller_add_product' %}" class="btn btn-success btn-sm">اضافة</a>

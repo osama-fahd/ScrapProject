@@ -34,7 +34,7 @@ def seller_dashboard(request):
     products = Product.objects.filter(seller=seller)
     categories = Category.objects.all()
     cars = Car.objects.all()
-    brands = Part.objects.values_list('name', flat=True).distinct() 
+    parts = Part.objects.values_list('name', flat=True).distinct() 
     years = range(2000, 2025)
 
     # Apply filters
@@ -61,7 +61,7 @@ def seller_dashboard(request):
         'page_obj': page_obj,
         'categories': categories,
         'cars': cars,
-        'brands': brands,
+        'parts': parts,
         'years': years,
     }
     return render(request, 'sellers/seller_dashboard.html', context)
@@ -325,19 +325,6 @@ def seller_profile_view(request, seller_id):
 
         return redirect("main:home_view")
 
-# def order_item_view(request,cart_id:Cart):
-#     cart= Cart.objects.get(pk=cart_id)
-#     customer = cart.customer
-
-#     for cartitem in cart.cartitem_set.all():
-#         if cartitem.product.seller.id == request.user.profileseller.id():
-#             product=cartitem.product(
-
-#             )
-
-
-
-
 
 
 @login_required
@@ -424,9 +411,9 @@ def mark_as_delivered_view(request, order_item_id):
     order_item.save()
 
     # save to CustomerSellersHistorty so user can add review on seller
-    customer = order_item.customer
-    csHistorty_obj = CustomerSellersHistorty(sellers=seller, customer=customer)
-    csHistorty_obj.save()
+    # customer = order_item.customer
+    # csHistorty_obj = CustomerSellersHistorty(sellers=seller, customer=customer)
+    # csHistorty_obj.save()
 
     messages.success(request, "تم وضع الطلب على أنه تم التوصيل.", "alert-success")
     return redirect("seller:order_detail_view", order_item_id=order_item.id)
@@ -467,7 +454,8 @@ def checkout(request):
             product=item.product,
             customer=profile_customer,
             seller=seller,
-            status=OrderItem.Status.PENDING
+            status=OrderItem.Status.PENDING,
+            quantity=item.quantity
         )
 
         # Pass request to the notification function so we can build absolute URI
@@ -508,6 +496,8 @@ def accept_order_item(request, order_item_id):
     order_item = get_object_or_404(OrderItem, id=order_item_id, seller=seller)
     order_item.status = OrderItem.Status.ACCEPTED
     order_item.save()
+    
+    order_item.product.stock -= order_item.quantity
 
     # Notify the customer
     # send_order_status_notification_to_customer(order_item.customer, "تم قبول طلبك، الطلب قيد التوصيل")

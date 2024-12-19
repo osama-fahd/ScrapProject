@@ -3,7 +3,7 @@
 {% block content %}
 <section class="container">
 
-    <h2 class="mb-4 text-center">سلة التسوق</h2>
+    <h1 class="mb-4 ">سلة التسوق</h1>
 
     {% if cart_items %}
         <table class="table table-striped table-bordered">
@@ -42,12 +42,12 @@
         </table>
         
         <div class="d-flex justify-content-between mt-4 mb-4">
-            <h5><strong>Total Items:</strong> {{ total_items }}</h5>
-            <h5><strong>Total Price:</strong> <span class="text-success">${{ total_price }}</span></h5>
+            <h5><strong>الكمية الاجمالية</strong> {{ total_items }}</h5>
+            <h5><strong>القيمة الاجمالية</strong> <span class="text-custom"> <b>ريال</b> {{ total_price }}</span></h5>
         </div>
 
         <div class="d-flex justify-content-end mt-4">
-            <button type="submit" class="btn btn-success btn-sm " style="width: 200px;"><a href="{% url 'seller:checkout' %}" >شراء</a></button>
+            <button type="submit" class="btn btn-custom " style="width: 200px;"><a href="{% url 'seller:checkout' %}" >شراء</a></button>
         </div>
 
     {% else %}
