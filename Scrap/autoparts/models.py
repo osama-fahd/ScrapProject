@@ -45,6 +45,7 @@ class Product(models.Model):
     delivery_cost = models.IntegerField(blank=True, null=True)
     description = models.CharField(max_length=2000)
     image = models.ImageField(upload_to="products_images/", default="products_images/default.svg", blank=True)
+    # warranty =models.CharField(max_length=1024, blank=True, null=True)
 
     # method that returns part image if product has no image or has default.svg
     def get_display_image_url(self):

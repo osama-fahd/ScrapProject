@@ -41,9 +41,11 @@ nav a {
 }
 
 a {
+    color: #000000 !important;
     text-decoration: none !important;
     transition: all 0.3 ease-in-out !important;
 }
+
 
 a.main-link {
     color: #000000 !important;
@@ -55,12 +57,16 @@ a:hover {
     transform: scale(1.02);
 }
 
+.seller-name {
+    text-align: center;
+    font-weight: 800;
+}
 
 /* Change the main colors */
 .btn-custom, .tables-custom, .thead-custom, .div-custom {
     background-color: #ff9900c3;
     border-color: #ff9900;
-    color: #fff;  /* for text color */
+    color: #fff !important;  /* for text color */
 }
 .btn-custom:hover {
     background-color: #ff9900; /* slightly darker shade for hover */

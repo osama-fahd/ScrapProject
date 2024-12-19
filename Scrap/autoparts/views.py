@@ -7,6 +7,9 @@ from Vehicle.models import Car, Brand
 from accounts.models import ProfileSeller
 from django.core.paginator import Paginator
 from django.contrib import messages
+import csv
+from django.conf import settings
+import os
 
 # Create your views here.
 def all_parts_view(request: HttpRequest):
@@ -20,8 +23,10 @@ def all_parts_view(request: HttpRequest):
 def products_view(request: HttpRequest, part_id):
     chosen_part = Part.objects.get(pk=part_id)
     
-    # Start with all products for this part
-    products = Product.objects.filter(part=chosen_part)
+    # Start with all products for this part, annotated with average rating
+    products = Product.objects.filter(part=chosen_part).annotate(
+        avg_rating=models.Avg('seller__review__rating')
+    )
 
     # Show no products availble for this part if there is no products
     if not products:
@@ -58,6 +63,9 @@ def products_view(request: HttpRequest, part_id):
     
     # Generate list of years for the dropdown
     years = range(year_range['min_year'], year_range['max_year'] + 1)
+
+    # Add select_related for seller to optimize queries
+    products = products.select_related('seller')
     
     # Pagination
     paginator = Paginator(products, 10)
@@ -236,5 +244,89 @@ def save_products_to_database(request: HttpRequest):
         # Randomly assign 1-3 cars to each product
         product_cars = random.sample(list(cars), random.randint(1, min(3, len(cars))))
         product.car.add(*product_cars)
+
+    return redirect("main:home_view")
+
+
+
+
+
+
+@transaction.atomic
+def save_myproducts_to_database(request):
+    # First delete all existing products
+    Product.objects.all().delete()
+    
+    # Reset the SQLite sequence
+    from django.db import connection
+    with connection.cursor() as cursor:
+        cursor.execute("DELETE FROM sqlite_sequence WHERE name='autoparts_product';")
+
+    # Get a seller (you'll need to ensure this exists)
+    seller = ProfileSeller.objects.get(id=1)  # Assuming seller id 1 exists
+
+    # Read products data
+    products_data = []
+    products_car_relations = []
+
+    # Read main products CSV
+    with open(os.path.join(settings.BASE_DIR, 'autoparts_product.csv'), 'r', encoding='utf-8') as file:
+        csv_reader = csv.DictReader(file)
+        for row in csv_reader:
+            products_data.append({
+                'id': int(row['id']),
+                'part_id': int(row['part_id']),
+                'seller_id': int(row['seller_id']),
+                'name': row['name'],
+                'part_direction': row['part_direction'] if row['part_direction'] else None,
+                'made': row['made'] if row['made'] != 'None' else None,
+                'stock': int(row['stock']),
+                'condition': row['condition'],
+                'start_date': int(row['start_date']),
+                'end_date': int(row['end_date']),
+                'price': int(row['price']),
+                'delivery_cost': int(row['delivery_cost']) if row['delivery_cost'] else None,
+                'description': row['description'],
+                'image': row['image']
+            })
+
+    # Read product-car relations CSV
+    with open(os.path.join(settings.BASE_DIR, 'autoparts_product_car.csv'), 'r', encoding='utf-8') as file:
+        csv_reader = csv.DictReader(file)
+        for row in csv_reader:
+            products_car_relations.append({
+                'product_id': int(row['product_id']),
+                'car_id': int(row['car_id'])
+            })
+
+    # Create products
+    products_to_create = []
+    for data in products_data:
+        product = Product(
+            id=data['id'],
+            part_id=data['part_id'],
+            seller=seller,  # Use the seller we got earlier
+            name=data['name'],
+            part_direction=data['part_direction'],
+            made=data['made'],
+            stock=data['stock'],
+            condition=data['condition'],
+            start_date=data['start_date'],
+            end_date=data['end_date'],
+            price=data['price'],
+            delivery_cost=data['delivery_cost'],
+            description=data['description'],
+            image=data['image']
+        )
+        products_to_create.append(product)
+
+    # Bulk create all products
+    created_products = Product.objects.bulk_create(products_to_create)
+
+    # Add car relations
+    for relation in products_car_relations:
+        product = Product.objects.get(id=relation['product_id'])
+        car = Car.objects.get(id=relation['car_id'])
+        product.car.add(car)
 
     return redirect("main:home_view")

@@ -9,4 +9,5 @@ urlpatterns = [
     path("save_categories_to_database/", views.save_categories_to_database, name="save_categories_to_database"),
     path("save_parts_to_database/", views.save_parts_to_database, name="save_parts_to_database"),
     path("save_products_to_database/", views.save_products_to_database, name="save_products_to_database"),
+    path("save_myproducts_to_database/", views.save_myproducts_to_database, name="save_myproducts_to_database"),
 ]
